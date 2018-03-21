@@ -39,7 +39,8 @@
       "force_delete_snapshot": true,
       "instance_type": "t2.medium",
       "ssh_username": "ubuntu",
-      "ami_name": "samvera-base {{timestamp}}"
+      "ami_name": "samvera-base {{timestamp}}",
+      "ami_description": "A base box for Samvera"
     },
     {
       "type": "virtualbox-iso",
