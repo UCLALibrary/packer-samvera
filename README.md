@@ -6,8 +6,10 @@ In the end, I'd like to see the option of an all-in-one box or a collection of s
 
 FWIW, the heavy lifting of the build is done by Data Curation Experts' [ansible-samvera](https://github.com/curationexperts/ansible-samvera) project.
 
-Right now, there are two possible outputs to the build: an AWS AMI and a Vagrant VirtualBox. The build also is done in two steps. The first produces a samvera-base box/AMI and the second installs an 
-instance of Hyrax from a GitHub repository (with the output of that being either a new AMI or a new Vagrant box).
+There are two possible outputs from the build: an AWS AMI and/or a Vagrant VirtualBox.
+
+The build is done in two steps. The first produces a 'samvera-base' box/AMI and the second installs an instance of Hyrax from a GitHub repository (with the output of that second build also being either a 
+new AMI and/or new Vagrant VirtualBox).
 
 ### Getting Started
 
