@@ -9,6 +9,10 @@ FWIW, the heavy lifting of the build is done by Data Curation Experts' [ansible-
 Right now, there are two possible outputs to the build: an AWS AMI and a Vagrant VirtualBox. The build also is done in two steps. The first produces a samvera-base box/AMI and the second installs an 
 instance of Hyrax from a GitHub repository (with the output of that being either a new AMI or a new Vagrant box).
 
+### Getting Started
+
+Copy the `sample-config.json` file to `config.json` and add or change its variables as needed.
+
 ### How to Build a 'samvera-base' AMI
 
 packer build -only=amazon-ebs -var-file=config.json samvera-base.json
@@ -29,7 +33,7 @@ Add it to any of the other above command lines, as needed, and you can SSH into 
 
 ### License
 
-BSD-3-Clause
+[BSD-3-Clause](LICENSE.txt)
 
 ### Contacts
 
