@@ -1,0 +1,14 @@
+{
+  "aws_access_key": "YOUR_ACCESS_KEY_HERE",
+  "aws_secret_key": "YOUR_SECRET_KEY_HERE",
+  "aws_region": "us-east-1",
+  "samvera_db_user": "demo_db_user",
+  "samvera_db_password": "demo_db_password",
+  "root_db_password": "demo_root_db_password",
+  "timezone": "America/Los_Angeles",
+  "hostname": "localhost",
+  "domain": "localhost",
+  "project_name": "nurax",
+  "project_owner": "ksclarke",
+  "cap_deployment": "localhost"
+}

@@ -1,0 +1,2 @@
+- name: ansible-samvera
+  src: https://github.com/ksclarke/ansible-samvera

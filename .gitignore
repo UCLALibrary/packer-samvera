@@ -1,0 +1,9 @@
+# Project's private build configuration
+config.json
+
+# Packer's cached files
+packer_cache
+
+# Vagrant's build and runtime files
+builds/*.box
+vagrant/.vagrant

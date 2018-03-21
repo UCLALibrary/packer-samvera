@@ -1,0 +1,19 @@
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ksclarke/samvera-base"
+  config.vm.network "forwarded_port", guest: 80, host: 8080
+
+
+#  pub_key = `cat ~/.ssh/id_rsa.pub`
+
+#  config.vm.provision "shell", inline: <<-EOC
+#    echo '#{pub_key}' >> /home/vagrant/.ssh/authorized_keys
+#    sudo sed -i -e "\\#PasswordAuthentication yes# s#PasswordAuthentication yes#PasswordAuthentication no#g" /etc/ssh/sshd_config
+#    sudo service ssh restart
+#  EOC
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "1024"
+  end
+
+end
