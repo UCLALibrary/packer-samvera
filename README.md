@@ -15,15 +15,15 @@ Copy the `sample-config.json` file to `config.json` and add or change its variab
 
 ### How to Build a 'samvera-base' AMI
 
-packer build -only=amazon-ebs -var-file=config.json samvera-base.json
+    packer build -only=amazon-ebs -var-file=config.json samvera-base.json
 
 ### How to Build a Vagrant 'samvera-base' Box
 
-packer build -only=vagrant -var-file=config.json samvera-base.json
+    packer build -only=vagrant -var-file=config.json samvera-base.json
 
 ### How to Build and Deploy a Vagrant 'samvera-base' Box
 
-packer build -only=vagrant-deploy -var-file=config.json samvera-base.json
+    packer build -only=vagrant-deploy -var-file=config.json samvera-base.json
 
 ### Tips and Tricks
 
