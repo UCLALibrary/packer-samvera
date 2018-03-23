@@ -33,7 +33,7 @@ A useful flag to get the build to pause when there is an error: `-on-error=ask`
 
 Add it to any of the other above command lines, as needed, and you can SSH into the box to see what's broken (if the Packer logs aren't sufficient).
 
-## Gotchas
+### Gotchas
 
 This build is tested with the default versions of Vagrant and VirtualBox that are found in the Ubuntu package repository. If you're running the latest version of Vagrant from Hashicorp you might have 
 issues related to the corresponding versions of the VirtualBox Guest Additions.
