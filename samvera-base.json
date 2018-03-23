@@ -10,8 +10,7 @@
     "hostname": "",
     "domain": "",
     "project_name": "",
-    "project_owner": "",
-    "cap_deployment": "",
+    "ssh_keys_to_add": "",
     "vagrant_cloud_token": "",
     "vagrant_version": "0.0.1-{{ timestamp }}",
     "ubuntu_version": "16.04",
@@ -39,7 +38,7 @@
       "force_delete_snapshot": true,
       "instance_type": "t2.medium",
       "ssh_username": "ubuntu",
-      "ami_name": "samvera-base {{timestamp}}",
+      "ami_name": "samvera-base {{ timestamp }}",
       "ami_description": "A base box for Samvera"
     },
     {
@@ -87,12 +86,12 @@
       "ssh_port": 22,
       "ssh_wait_timeout": "10000s",
       "shutdown_command": "echo 'vagrant' | sudo -S shutdown -P now",
-      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "guest_additions_path": "VBoxGuestAdditions_{{ .Version }}.iso",
       "virtualbox_version_file": ".vbox_version",
       "vm_name": "samvera-base",
       "vboxmanage": [
-        [ "modifyvm", "{{.Name}}", "--memory", "1024" ],
-        [ "modifyvm", "{{.Name}}", "--cpus", "1" ]
+        [ "modifyvm", "{{ .Name }}", "--memory", "1024" ],
+        [ "modifyvm", "{{ .Name }}", "--cpus", "1" ]
       ]
     },
     {
@@ -140,16 +139,22 @@
       "ssh_port": 22,
       "ssh_wait_timeout": "10000s",
       "shutdown_command": "echo 'vagrant' | sudo -S shutdown -P now",
-      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "guest_additions_path": "VBoxGuestAdditions_{{ .Version }}.iso",
       "virtualbox_version_file": ".vbox_version",
       "vm_name": "samvera-base",
       "vboxmanage": [
-        [ "modifyvm", "{{.Name}}", "--memory", "1024" ],
-        [ "modifyvm", "{{.Name}}", "--cpus", "1" ]
+        [ "modifyvm", "{{ .Name }}", "--memory", "1024" ],
+        [ "modifyvm", "{{ .Name }}", "--cpus", "1" ]
       ]
     }
   ],
   "provisioners": [
+    {
+      "type": "shell",
+      "only": [ "amazon-ebs" ],
+      "execute_command": "echo '{{ user `ssh-password` }}' | {{ .Vars }} /usr/bin/sudo -S -E bash '{{ .Path }}'",
+      "script": "scripts/setup.sh"
+    },
     {
       "type": "shell",
       "only": [ "vagrant", "vagrant-deploy" ],
@@ -163,34 +168,36 @@
       "script": "scripts/setup-vagrant.sh"
     },
     {
-      "type": "shell",
-      "only": [ "amazon-ebs" ],
-      "execute_command": "echo '{{ user `ssh-password` }}' | {{ .Vars }} /usr/bin/sudo -S -E bash '{{ .Path }}'",
-      "script": "scripts/setup.sh"
-    },
-    {
       "type": "ansible-local",
       "only": [ "vagrant", "vagrant-deploy" ],
-      "playbook_file": "ansible/playbooks/main.yml",
-      "galaxy_file": "ansible/requirements/main.yaml",
+      "playbook_file": "ansible/playbooks/samvera-base.yml",
+      "galaxy_file": "ansible/requirements/main.yml",
       "extra_arguments": [
-        "-e \" samvera_db_user={{user `samvera_db_user`}} samvera_db_password={{user `samvera_db_password`}}\"",
-        "-e \"root_db_password={{user `root_db_password`}} timezone={{user `timezone`}} hostname={{user `hostname`}}\"",
-        "-e \"domain={{user `domain`}} project_name={{user `project_name`}} project_owner={{user `project_owner`}}\"",
-        "-e \"cap_deployment={{user `cap_deployment`}}\"",
+        "-e \"samvera_db_user={{ user `samvera_db_user` }}\"",
+        "-e \"samvera_db_password={{ user `samvera_db_password` }}\"",
+        "-e \"root_db_password={{ user `root_db_password` }}\"",
+        "-e \"timezone={{ user `timezone` }}\"",
+        "-e \"hostname={{ user `hostname` }}\"",
+        "-e \"domain={{ user `domain` }}\"",
+        "-e \"project_name={{ user `project_name` }}\"",
+        "-e \"ssh_keys_to_add={{ user `ssh_keys_to_add` }}\"",
         "-e \"ansible_sudo_pass=vagrant\""
       ]
     },
     {
       "type": "ansible-local",
       "only": [ "amazon-ebs" ],
-      "playbook_file": "ansible/playbooks/main.yml",
-      "galaxy_file": "ansible/requirements/main.yaml",
+      "playbook_file": "ansible/playbooks/samvera-base.yml",
+      "galaxy_file": "ansible/requirements/main.yml",
       "extra_arguments": [
-        "-e \"samvera_db_user={{user `samvera_db_user`}} samvera_db_password={{user `samvera_db_password`}}\"",
-        "-e \"root_db_password={{user `root_db_password`}} timezone={{user `timezone`}} hostname={{user `hostname`}}\"",
-        "-e \"domain={{user `domain`}} project_name={{user `project_name`}} project_owner={{user `project_owner`}}\"",
-        "-e \"cap_deployment={{user `cap_deployment`}}\""
+        "-e \"samvera_db_user={{ user `samvera_db_user` }}\"",
+        "-e \"samvera_db_password={{ user `samvera_db_password` }}\"",
+        "-e \"root_db_password={{ user `root_db_password` }}\"",
+        "-e \"timezone={{ user `timezone` }}\"",
+        "-e \"hostname={{ user `hostname` }}\"",
+        "-e \"domain={{ user `domain` }}\"",
+        "-e \"project_name={{ user `project_name` }}\"",
+        "-e \"ssh_keys_to_add={{ user `ssh_keys_to_add` }}\""
       ]
     },
     {
@@ -217,8 +224,8 @@
       "type": "vagrant-cloud",
       "only": [ "vagrant-deploy" ],
       "box_tag": "ksclarke/samvera-base",
-      "access_token": "{{user `vagrant_cloud_token`}}",
-      "version": "{{user `vagrant_version`}}"
+      "access_token": "{{ user `vagrant_cloud_token` }}",
+      "version": "{{ user `vagrant_version` }}"
     }]
   ]
 }

@@ -2,30 +2,18 @@
   name: Configure server
   user: ubuntu
   gather_facts: yes
-  vars:
-    project_name: "{{ project_name }}"
-    keys_to_add:
-      - https://github.com/mark-dce.keys
-      - https://github.com/little9.keys
-      - https://github.com/no-reply.keys
-      - https://github.com/bess.keys
-      - https://github.com/val99erie.keys
-      - https://github.com/jenlindner.keys
-      - https://github.com/ksclarke.keys
-    db_user: "{{ samvera_db_user }}"
-    db_pass: "{{ samvera_db_password }}"
   roles:
     - { role: ansible-samvera/roles/packages }
     - { role: ansible-samvera/roles/set_timezone, timezone: "{{ timezone }}" }
     - { role: ansible-samvera/roles/set_hostname, hostname: "{{ hostname }}", domain: "{{ domain}}" }
     - { role: ansible-samvera/roles/sshd_config }
-    - { role: ansible-samvera/roles/setup_logrotation }
+    - { role: ansible-samvera/roles/setup_logrotation, project_name: "{{ project_name }}" }
     - { role: ansible-samvera/roles/clamav }
     - { role: ansible-samvera/roles/ruby, ruby_version: '2.4.2', ruby_sha_256: '93b9e75e00b262bc4def6b26b7ae8717efc252c47154abb7392e54357e6c8c9c' }
     - { role: ansible-samvera/roles/fedora, fedora_version: '4.7.1' }
     - { role: ansible-samvera/roles/solr, solr_version: '6.6.2' }
     - { role: ansible-samvera/roles/fits, fits_version: '0.8.4' }
-    - { role: ansible-samvera/roles/postgres, postgres_pass: "{{ root_db_password }}" }
+    - { role: ansible-samvera/roles/postgres, postgres_pass: "{{ root_db_password }}", db_user: "{{ samvera_db_user }}", db_pass: "{{ samvera_db_password }}" }
     - { role: ansible-samvera/roles/apache, passenger_ver: '5.1.11'}
     - { role: ansible-samvera/roles/apache_with_mod_ssl }
     # Note: You will need to either copy your SSL certs by hand,
@@ -33,7 +21,7 @@
     # - { role: dce_ssl }
     - { role: ansible-samvera/roles/imagemagick, imagemagick_ver: '7.0.7', gs_ver: '9.19', openjpg_ver: '2.1.0', libtiff_ver: '4.0.5', libpng_ver: '1.6.28' }
     - { role: ansible-samvera/roles/ffmpeg, ffmpeg_version: '3.4' }
-    - { role: ansible-samvera/roles/capistrano_setup }
+    - { role: ansible-samvera/roles/capistrano_setup, keys_to_add: "{{ ssh_keys_to_add }}" }
 #    - { role: ansible-samvera/roles/dotenv }
 #    - { role: ansible-samvera/roles/first_deploy, project_name: "{{ project_name }}", project_owner: "{{ project_owner }}", cap_deployment: "{{ cap_deployment }}" }
 #    - { role: ansible-samvera/roles/force_ssl }

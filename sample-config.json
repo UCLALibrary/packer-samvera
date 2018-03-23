@@ -10,5 +10,8 @@
   "domain": "localhost",
   "project_name": "nurax",
   "project_owner": "ksclarke",
-  "cap_deployment": "localhost"
+  "cap_deployment": "localhost",
+  "vagrant_cloud_token": "",
+  "vagrant_cloud_user": "",
+  "ssh_keys_to_add": "['https://github.com/ksclarke.keys','https://github.com/bess.keys','https://github.com/mark-dce.keys','https://github.com/hardyoyo.keys']"
 }

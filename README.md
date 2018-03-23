@@ -13,7 +13,7 @@ new AMI and/or new Vagrant VirtualBox).
 
 ### Getting Started
 
-Copy the `sample-config.json` file to `config.json` and add or change its variables as needed.
+Copy the `sample-config.json` file to `config.json` and add or change its variables as needed. You'll also need to download and install [Packer](https://www.packer.io/downloads.html).
 
 ### How to Build a 'samvera-base' AMI
 
