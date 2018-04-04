@@ -2,7 +2,9 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "ksclarke/samvera-base"
   config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network "forwarded_port", guest: 8983, host: 8983
 
+#  config.vm.synced_folder ".", "/vagrant", disabled: true
 
 #  pub_key = `cat ~/.ssh/id_rsa.pub`
 
@@ -13,7 +15,7 @@ Vagrant.configure("2") do |config|
 #  EOC
 
   config.vm.provider "virtualbox" do |vb|
-    vb.memory = "1024"
+    vb.memory = "2048"
   end
 
 end

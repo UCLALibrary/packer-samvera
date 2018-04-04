@@ -1,0 +1,13 @@
+- hosts: all
+  name: Configure server
+  user: ubuntu
+  gather_facts: yes
+  vars:
+    - project_name: "{{ project_name }}"
+    - project_owner: "{{ project_owner }}"
+    - project_version: "{{ project_version }}"
+    - cap_deployment: "{{ cap_deployment }}"
+    - db_user: "{{ samvera_db_user }}"
+    - db_pass: "{{ samvera_db_password }}"
+  roles:
+    - { role: ansible-samvera/roles/first_deploy }

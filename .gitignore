@@ -5,5 +5,9 @@ config.json
 packer_cache
 
 # Vagrant's build and runtime files
-builds/*.box
-vagrant/.vagrant
+builds/vagrant/*.box
+builds/virtualbox/*.ovf
+builds/virtualbox/*.vmdk
+builds/virtualbox/*/
+vagrant/base/.vagrant
+vagrant/hyrax/.vagrant

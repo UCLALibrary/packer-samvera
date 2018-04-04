@@ -5,12 +5,12 @@ sudo apt-get -y -q install linux-headers-$(uname -r) build-essential dkms nfs-co
 
 # Install the Guest Additions CD
 mkdir /tmp/vboxguest
-mount -t iso9660 -o loop /home/vagrant/VBoxGuestAdditions*.iso /tmp/vboxguest
+mount -t iso9660 -o loop /home/vagrant/VBoxGuestAdditions.iso /tmp/vboxguest
 cd /tmp/vboxguest
 ./VBoxLinuxAdditions.run
 cd ~
 sudo umount /tmp/vboxguest
-rm VBoxGuestAdditions_*.iso
+rm VBoxGuestAdditions.iso
 
 # Setup SSH key environment
 mkdir ~/.ssh
