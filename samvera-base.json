@@ -12,6 +12,7 @@
     "project_name": "",
     "ssh_keys_to_add": "",
     "vagrant_cloud_token": "",
+    "vagrant_cloud_user": "",
     "vagrant_version": "0.0.3-{{ timestamp }}",
     "ubuntu_version": "16.04",
     "vagrant_source_iso": "ubuntu-16.04.4-server-amd64.iso",
