@@ -230,7 +230,7 @@
     {
       "type": "vagrant-cloud",
       "only": [ "vagrant-deploy" ],
-      "box_tag": "ksclarke/samvera-base",
+      "box_tag": "{{ user `vagrant_cloud_user` }}/samvera-base",
       "access_token": "{{ user `vagrant_cloud_token` }}",
       "version": "{{ user `vagrant_version` }}"
     },
