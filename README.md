@@ -23,7 +23,7 @@ default Hyrax application is Nurax, which if I understand correctly is a snapsho
 
 The second step can be run independently (and repeatedly) once the first has been successfully run.
 
-### How to Build a Vagrant Samvera-Hyrax Box (in two steps)
+### How to Build a Samvera-Hyrax Vagrant Box (in two steps)
 
     packer build -only=vagrant -var-file=config.json samvera-base.json
     packer build -only=amazon-ebs -var-file=config.json samvera-hyrax.json
