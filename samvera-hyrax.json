@@ -16,8 +16,8 @@
     "ubuntu_version": "16.04",
     "vagrant_source_iso": "ubuntu-16.04.4-server-amd64.iso",
     "vagrant_source_iso_sha256_checksum": "0a03608988cfd2e50567990dc8be96fb3c501e198e2e6efcb846d89efc7b89f2",
-    "aws_source_ami": "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*",
-    "aws_ami_owner": "099720109477"
+    "aws_source_ami": "samvera-base *",
+    "aws_ami_owner": "self"
   },
   "builders": [
     {
@@ -38,8 +38,8 @@
       "force_delete_snapshot": true,
       "instance_type": "t2.medium",
       "ssh_username": "ubuntu",
-      "ami_name": "samvera-base {{ timestamp }}",
-      "ami_description": "A base box for Samvera"
+      "ami_name": "samvera-hyrax {{ timestamp }}",
+      "ami_description": "A Hyrax AMI for {{ user `project_name` }}"
     },
     {
       "type": "virtualbox-ovf",
