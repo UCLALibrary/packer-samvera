@@ -26,7 +26,7 @@ The second step can be run independently (and repeatedly) once the first has bee
 ### How to Build a Samvera-Hyrax Vagrant Box (in two steps)
 
     packer build -only=vagrant -var-file=config.json samvera-base.json
-    packer build -only=amazon-ebs -var-file=config.json samvera-hyrax.json
+    packer build -only=vagrant -var-file=config.json samvera-hyrax.json
 
 The second step can be run independently (and repeatedly) once the first has been successfully run.
 
