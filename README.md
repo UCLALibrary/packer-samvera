@@ -30,6 +30,23 @@ The second step can be run independently (and repeatedly) once the first has bee
 
 The second step can be run independently (and repeatedly) once the first has been successfully run.
 
+### How to Use the Samvera-Hyrax Vagrant Box
+
+The first thing you'll want to do after building the box is to add the box to your local Vagrant environment:
+
+    cd vagrant/hyrax
+    vagrant box add ksclarke/samvera-hyrax ../../builds/vagrant/samvera-hyrax.box
+
+After that you can bring it up and, if you want, SSH into it:
+
+    vagrant up
+    vagrant ssh
+
+Hyrax is exposed on http://localhost:8080 and Solr on http://localhost:8983/solr.
+
+In case you were wondering what happened to `vagrant init` in the above steps... by changing into the `vagrant/hyrax` directory, we changed into the directory that has the box's Vagrantfile. If you use 
+the prebuilt version of samvera-hyrax, mentioned below, you would also need to run `vagrant init` to get a local copy of the Vagrantfile.
+
 ### But I Don't Want to Build Anything
 
 An alternative to building the Vagrant Box yourself is to just use my prebuilt one:
