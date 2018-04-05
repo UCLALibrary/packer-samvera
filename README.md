@@ -53,7 +53,7 @@ An alternative to building the Vagrant Box yourself is to just use my prebuilt o
 
     https://app.vagrantup.com/ksclarke/boxes/samvera-hyrax
 
-The steps to do that are pretty simple:
+The steps to do that are pretty simple (you might want to create a new directory to do them in):
 
     vagrant box add ksclarke/samvera-hyrax
     vagrant init
