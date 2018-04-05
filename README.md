@@ -53,7 +53,18 @@ An alternative to building the Vagrant Box yourself is to just use my prebuilt o
 
     https://app.vagrantup.com/ksclarke/boxes/samvera-hyrax
 
-You can see the passwords that have been set in the sample-config.json file from this project's root directory.
+The steps to do that are pretty simple:
+
+    vagrant box add ksclarke/samvera-hyrax
+    vagrant init
+    vagrant up
+
+You can then SSH in if you want to poke around further:
+
+    vagrant ssh
+
+If you want to interact with the box's services, you can see the passwords for them in the sample-config.json file from this project's root directory. You can also change characteristics of the Vagrant 
+Box (for instance, memory, etc.) in the Vagrantfile that is downloaded in the `vagrant init` step.
 
 ### Tips and Tricks
 
