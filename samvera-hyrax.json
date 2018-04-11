@@ -17,11 +17,14 @@
     "vagrant_source_iso": "ubuntu-16.04.4-server-amd64.iso",
     "vagrant_source_iso_sha256_checksum": "0a03608988cfd2e50567990dc8be96fb3c501e198e2e6efcb846d89efc7b89f2",
     "aws_source_ami": "samvera-base *",
-    "aws_ami_owner": "self"
+    "aws_ami_owner": "self",
+    "vb_memory": "2048",
+    "vb_cpu_cores": "2"
   },
   "builders": [
     {
       "type": "amazon-ebs",
+      "name": "ami",
       "access_key": "{{ user `aws_access_key` }}",
       "secret_key": "{{ user `aws_secret_key` }}",
       "region": "{{ user `aws_region` }}",
@@ -43,7 +46,7 @@
     },
     {
       "type": "virtualbox-ovf",
-      "name": "vagrant",
+      "name": "box",
       "source_path": "builds/virtualbox/samvera-base.ovf",
       "headless": true,
       "ssh_username": "vagrant",
@@ -55,32 +58,15 @@
       "vm_name": "samvera-hyrax",
       "guest_additions_mode": "disable",
       "vboxmanage": [
-        [ "modifyvm", "{{ .Name }}", "--memory", "2048" ],
-        [ "modifyvm", "{{ .Name }}", "--cpus", "2" ]
-      ]
-    },
-    {
-      "type": "virtualbox-ovf",
-      "name": "vagrant-deploy",
-      "source_path": "builds/virtualbox/samvera-base.ovf",
-      "headless": true,
-      "ssh_username": "vagrant",
-      "ssh_password": "vagrant",
-      "ssh_port": 22,
-      "ssh_pty": true,
-      "ssh_wait_timeout": "10000s",
-      "shutdown_command": "echo 'vagrant' | sudo -S shutdown -P now",
-      "vm_name": "samvera-hyrax",
-      "vboxmanage": [
-        [ "modifyvm", "{{ .Name }}", "--memory", "2048" ],
-        [ "modifyvm", "{{ .Name }}", "--cpus", "2" ]
+        [ "modifyvm", "{{ .Name }}", "--memory", "{{ user `vb_memory`  }}" ],
+        [ "modifyvm", "{{ .Name }}", "--cpus", "{{ user `vb_cpu_cores` }}" ]
       ]
     }
   ],
   "provisioners": [
     {
       "type": "shell",
-      "only": [ "vagrant", "vagrant-deploy" ],
+      "only": [ "ami", "box" ],
       "execute_command": "echo 'vagrant' | {{ .Vars }} /usr/bin/sudo -S -E bash '{{ .Path }}'",
       "script": "scripts/setup-hyrax.sh",
       "environment_vars": [
@@ -95,7 +81,7 @@
     },
     {
       "type": "ansible-local",
-      "only": [ "vagrant", "vagrant-deploy" ],
+      "only": [ "box" ],
       "playbook_file": "ansible/playbooks/samvera-hyrax.yml",
       "galaxy_file": "ansible/requirements/main.yml",
       "extra_arguments": [
@@ -108,7 +94,7 @@
     },
     {
       "type": "ansible-local",
-      "only": [ "amazon-ebs" ],
+      "only": [ "ami" ],
       "playbook_file": "ansible/playbooks/samvera-hyrax.yml",
       "galaxy_file": "ansible/requirements/main.yml",
       "extra_arguments": [
@@ -120,27 +106,21 @@
     },
     {
       "type": "shell",
-      "only": [ "vagrant", "vagrant-deploy" ],
+      "only": [ "ami", "box" ],
       "execute_command": "echo 'vagrant' | {{ .Vars }} /usr/bin/sudo -S -E bash '{{ .Path }}'",
-      "script": "scripts/cleanup.sh"
-    },
-    {
-      "type": "shell",
-      "only": [ "amazon-ebs" ],
-      "execute_command": "echo '{{ user `ssh-password` }}' | {{ .Vars }} /usr/bin/sudo -S -E bash '{{ .Path }}'",
       "script": "scripts/cleanup.sh"
     }
   ],
   "post-processors": [
     [{
       "type": "vagrant",
-      "only": [ "vagrant", "vagrant-deploy" ],
+      "only": [ "box" ],
       "output": "builds/vagrant/samvera-hyrax.box",
       "vagrantfile_template": "vagrant/hyrax/Vagrantfile"
     },
     {
       "type": "vagrant-cloud",
-      "only": [ "vagrant-deploy" ],
+      "only": [ "box" ],
       "box_tag": "{{ user `vagrant_cloud_user` }}/samvera-hyrax",
       "access_token": "{{ user `vagrant_cloud_token` }}",
       "version": "{{ user `vagrant_version` }}"

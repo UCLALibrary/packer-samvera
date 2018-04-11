@@ -13,5 +13,6 @@
   "cap_deployment": "localhost",
   "vagrant_cloud_token": "",
   "vagrant_cloud_user": "",
-  "ssh_keys_to_add": "['https://github.com/ksclarke.keys','https://github.com/bess.keys','https://github.com/mark-dce.keys','https://github.com/hardyoyo.keys']"
+  "ssh_keys_to_add": "['https://github.com/ksclarke.keys','https://github.com/bess.keys','https://github.com/mark-dce.keys','https://github.com/hardyoyo.keys']",
+  "docker_user": ""
 }

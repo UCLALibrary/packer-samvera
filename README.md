@@ -9,30 +9,39 @@ FWIW (and to their credit), the heavy lifting of the build is done by Data Curat
 
 There are currently two possible outputs from this Packer Samvera build: an AWS AMI (stored in your AWS space) and/or a Vagrant VirtualBox.
 
+## Requirements
+
+Bash is required to run the wrapper script. [Packer](https://www.packer.io/downloads.html) is required to run the build. And, [jq](https://stedolan.github.io/jq/download/) is required to work around a 
+[Packer limitation](https://github.com/hashicorp/packer/issues/2679).
+
+There are also some optional requirements, depending on the type of output you desire: an AWS account if you want to create AMIs, Vagrant and VirtualBox installed on your local machine if you want to use 
+Vagrant, and Docker installed on your local machine if you want to use Docker.
+
 ## Getting Started
 
-Copy the `sample-config.json` file to `config.json` and add or change its variables as needed. You'll also need to download and install [Packer](https://www.packer.io/downloads.html).
+Copy the `sample-config.json` file to `config.json` and add or change its variables as needed. You can skip variables that aren't relevant to your build (e.g. AWS credentials if you're building a Vagrant 
+box).
 
 The Packer build is basically done in two steps. The first builds a "base box" with all the necessary system dependencies installed and the second installs a Hyrax application from a GitHub repo. The 
 default Hyrax application is Nurax, which if I understand correctly is a snapshot/sandbox environment.
 
-### How to build a Samvera-Hyrax AWS AMI (in two steps)
+### How to Build a Samvera-Hyrax AWS AMI (In Two Steps)
 
-    packer build -only=amazon-ebs -var-file=config.json samvera-base.json
-    packer build -only=amazon-ebs -var-file=config.json samvera-hyrax.json
+    ./build.sh base ami
+    ./build.sh hyrax ami
 
 The second step can be run independently (and repeatedly) once the first has been successfully run.
 
-### How to Build a Samvera-Hyrax Vagrant Box (in two steps)
+### How to Build a Samvera-Hyrax Vagrant Box (In Two Steps)
 
-    packer build -only=vagrant -var-file=config.json samvera-base.json
-    packer build -only=vagrant -var-file=config.json samvera-hyrax.json
+    ./build.sh base vagrant
+    ./build.sh hyrax vagrant
 
 The second step can be run independently (and repeatedly) once the first has been successfully run.
 
 ### How to Use the Samvera-Hyrax Vagrant Box
 
-The first thing you'll want to do after building the box is to add the box to your local Vagrant environment:
+The first thing you'll want to do after building is to add the box to your local Vagrant environment:
 
     cd vagrant/hyrax
     vagrant box add ksclarke/samvera-hyrax ../../builds/vagrant/samvera-hyrax.box
@@ -49,7 +58,7 @@ the prebuilt version of samvera-hyrax, mentioned below, you would also need to r
 
 ### But I Don't Want to Build Anything
 
-An alternative to building the Vagrant Box yourself is to just use my prebuilt one:
+An alternative to building the Vagrant box yourself is to just use my prebuilt one:
 
     https://app.vagrantup.com/ksclarke/boxes/samvera-hyrax
 
@@ -65,12 +74,6 @@ You can then SSH in if you want to poke around further:
 
 If you want to interact with the box's services, you can see the passwords for them in the sample-config.json file from this project's root directory. You can also change characteristics of the Vagrant 
 Box (for instance, memory, etc.) in the Vagrantfile that is downloaded in the `vagrant init` step.
-
-### Tips and Tricks
-
-A useful flag to add to get the build to pause when there is an error: `-on-error=ask`
-
-Add it to any of the other above command lines, as needed, and you can SSH into the box to see what's broken (if the Packer logs aren't sufficient).
 
 ### License
 

@@ -4,6 +4,9 @@ config.json
 # Packer's cached files
 packer_cache
 
+# In-process working directory
+output-box/
+
 # Vagrant's build and runtime files
 builds/vagrant/*.box
 builds/virtualbox/*.ovf
