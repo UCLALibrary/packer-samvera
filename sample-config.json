@@ -10,6 +10,7 @@
   "domain": "localhost",
   "project_name": "nurax",
   "project_owner": "ksclarke",
+  "project_version": "test",
   "cap_deployment": "localhost",
   "vagrant_cloud_token": "",
   "vagrant_cloud_user": "",
