@@ -22,7 +22,8 @@
     "aws_source_ami": "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*",
     "aws_ami_owner": "099720109477",
     "vb_memory": "4096",
-    "vb_cpu_cores": ""
+    "vb_cpu_cores": "",
+    "runid": "{{env `PACKER_RUN_UUID`}}"
   },
   "builders": [
     {
@@ -95,7 +96,7 @@
       "guest_additions_url": "{{ user `vagrant_guest_additions_iso` }}",
       "guest_additions_sha256": "{{ user `vagrant_guest_additions_iso_sha256_checksum` }}",
       "virtualbox_version_file": ".vbox_version",
-      "output_directory": "builds/virtualbox/{{ timestamp }}",
+      "output_directory": "builds/virtualbox/{{ user `runid` }}",
       "vm_name": "samvera-base",
       "vboxmanage": [
         [ "modifyvm", "{{ .Name }}", "--memory", "{{ user `vb_memory` }}" ],
@@ -175,8 +176,8 @@
       "type": "shell-local",
       "only": [ "box" ],
       "inline": [
-        "mv builds/virtualbox/{{ timestamp }}/* builds/virtualbox/",
-        "rmdir builds/virtualbox/{{ timestamp }}"
+        "mv builds/virtualbox/{{ user `runid` }}/* builds/virtualbox/",
+        "rmdir builds/virtualbox/{{ user `runid` }}"
       ]
     }]
   ]
