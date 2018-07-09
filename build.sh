@@ -18,7 +18,7 @@ DEFAULT_CORE_COUNT=2
 DEFAULT_MEMORY=2048
 
 # Optionally, make our builds speedier by giving them full access to the host's resources
-if [ "$3" == "fast" ]; then
+if [ "$3" == "fast" ] || [ "$2" == "fast" ]; then
   if hash getconf 2>/dev/null; then
     if hash free 2>/dev/null; then
       VB_MEMORY=$(free -m | awk '/^Mem:/{print $7}')
@@ -65,13 +65,22 @@ hash jq 2>/dev/null || {
   exit 1
 }
 
-if [ -z "$1" ] && [ -z "$2" ]; then
+if [ -z "$1" ]; then
   printUsage
 elif [ "$2" == "ami" ] || [ "$2" == "box" ]; then
   if [ "$1" == "base" ] || [ "$1" == "hyrax" ]; then
      TMPFILE=$(mktemp)
      "${FILTER[@]}" > $TMPFILE
      PACKER_LOG="$PACKER_LOG" packer "$PACKER_ACTION" -only="$2" -var-file="config.json" -on-error="ask" \
+       -var="vb_memory=$VB_MEMORY" -var="vb_cpu_cores=$VB_CPU_CORES" $TMPFILE
+  else
+    printUsage
+  fi
+elif [ "$2" == "fast" ] || [ -z "$2" ]; then
+  if [ "$1" == "base" ] || [ "$1" == "hyrax" ]; then
+     TMPFILE=$(mktemp)
+     "${FILTER[@]}" > $TMPFILE
+     PACKER_LOG="$PACKER_LOG" packer "$PACKER_ACTION" -var-file="config.json" -on-error="ask" \
        -var="vb_memory=$VB_MEMORY" -var="vb_cpu_cores=$VB_CPU_CORES" $TMPFILE
   else
     printUsage
