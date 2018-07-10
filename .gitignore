@@ -1,5 +1,6 @@
 # Project's private build configuration
 config.json
+config-*.json
 
 # Packer's cached files
 packer_cache
