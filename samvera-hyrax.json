@@ -9,6 +9,7 @@
     "project_name": "",
     "project_owner": "",
     "project_version": "",
+    "geonames_username": "",
     "cap_deployment": "",
     "vagrant_cloud_token": "",
     "vagrant_cloud_user": "",
@@ -76,7 +77,8 @@
         "DB_NAME={{ user `project_name` }}",
         "PROJECT_OWNER={{ user `project_owner` }}",
         "PROJECT_NAME={{ user `project_name` }}",
-        "GITHUB_BRANCH={{ user `project_version` }}"
+        "GITHUB_BRANCH={{ user `project_version` }}",
+        "GEONAMES_USERNAME={{ user `geonames_username` }}"
       ]
     },
     {

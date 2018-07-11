@@ -18,3 +18,9 @@ echo "export DB_NAME=$DB_NAME" >> /etc/environment
 echo "export BRANCH=$GITHUB_BRANCH" >> /etc/environment
 echo "export PROJECT_NAME=$PROJECT_NAME" >> /etc/environment
 echo "export PROJECT_OWNER=$PROJECT_OWNER" >> /etc/environment
+echo "export GEONAMES_USERNAME=$GEONAMES_USERNAME" >> /etc/environment
+
+# I'm not using dotenv but something in the build expects this so we fake it...
+mkdir -p /opt/${PROJECT_NAME}/shared
+touch /opt/${PROJECT_NAME}/shared/.env.production
+chown -R deploy:deploy /opt/${PROJECT_NAME}/
