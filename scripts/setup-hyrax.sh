@@ -24,3 +24,12 @@ echo "export GEONAMES_USERNAME=$GEONAMES_USERNAME" >> /etc/environment
 mkdir -p /opt/${PROJECT_NAME}/shared
 touch /opt/${PROJECT_NAME}/shared/.env.production
 chown -R deploy:deploy /opt/${PROJECT_NAME}/
+
+echo "PROJECT_NAME=${PROJECT_NAME}" >> /opt/${PROJECT_NAME}/shared/.env.production
+echo "DATABASE_NAME=${DB_NAME}" >> /opt/${PROJECT_NAME}/shared/.env.production
+echo "DATABASE_USERNAME=${DB_USERNAME}" >> /opt/${PROJECT_NAME}/shared/.env.production
+echo "DATABASE_PASSWORD=${DB_PASSWORD}" >> /opt/${PROJECT_NAME}/shared/.env.production
+echo "DATABASE_POOL_SIZE=25" >> /opt/${PROJECT_NAME}/shared/.env.production
+echo "GEONAMES_USERNAME=${GEONAMES_USERNAME}" >> /opt/${PROJECT_NAME}/shared/.env.production
+echo "RAILS_SERVE_STATIC_FILES=true" >> /opt/${PROJECT_NAME}/shared/.env.production
+echo "SIDEKIQ_WORKERS=7" >> /opt/${PROJECT_NAME}/shared/.env.production
