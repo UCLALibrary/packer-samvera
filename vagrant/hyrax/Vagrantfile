@@ -14,6 +14,8 @@ Vagrant.configure("2") do |config|
 #    sudo service ssh restart
 #  EOC
 
+  config.ssh.forward_agent = true
+
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "2048"
   end
