@@ -1,5 +1,8 @@
 #! /bin/bash
 
+# Set the system language
+update-locale LANG="en_US.UTF-8" LANGUAGE="en_US"
+
 # Upgrade the system
 apt-get -y update
 apt-get -y upgrade
@@ -12,4 +15,4 @@ apt-get -y update
 apt-get -y install -f ansible
 
 # Setup some basics
-apt-get -y install nano htop git nmap curl wget tmux lynx
+apt-get -y install nano htop git nmap curl wget tmux lynx nodejs
