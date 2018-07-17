@@ -88,7 +88,7 @@
       "galaxy_file": "ansible/requirements/main.yml",
       "extra_arguments": [
         "-e \" samvera_db_user={{ user `samvera_db_user` }} samvera_db_password={{ user `samvera_db_password` }}\"",
-        "-e \"root_db_password={{ user `root_db_password` }} timezone={{ user `timezone` }} hostname={{ user `hostname` }}\"",
+        "-e \"postgres_pass={{ user `root_db_password` }} timezone={{ user `timezone` }} hostname={{ user `hostname` }}\"",
         "-e \"domain={{ user `domain` }} project_name={{ user `project_name` }} project_owner={{ user `project_owner` }}\"",
         "-e \"cap_deployment={{ user `cap_deployment` }} project_version={{ user `project_version` }}\"",
         "-e \"ansible_sudo_pass=vagrant\""
@@ -101,9 +101,9 @@
       "galaxy_file": "ansible/requirements/main.yml",
       "extra_arguments": [
         "-e \"samvera_db_user={{ user `samvera_db_user` }} samvera_db_password={{ user `samvera_db_password` }}\"",
-        "-e \"root_db_password={{ user `root_db_password` }} timezone={{ user `timezone` }} hostname={{ user `hostname` }}\"",
+        "-e \"postgres_pass={{ user `root_db_password` }} timezone={{ user `timezone` }} hostname={{ user `hostname` }}\"",
         "-e \"domain={{ user `domain` }} project_name={{ user `project_name` }} project_owner={{ user `project_owner` }}\"",
-        "-e \"cap_deployment={{ user `cap_deployment` }} project_version={{ user `project_version` }}\""
+        "-e \"cap_deployment={{ user `cap_deployment` }} project_version={{ user `project_version` }}\"", "--sudo"
       ]
     },
     {
