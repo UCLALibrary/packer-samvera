@@ -77,8 +77,8 @@ Box (for instance, memory, etc.) in the Vagrantfile that is downloaded in the `v
 
 ### Deploying from VM to a Remote Server
 
-The VM is setup to forward SSH keys to an agent that's running on the host machine. That means you can deploy from your Hyrax VM to a remote server if your Hyrax application is configured to do that 
-and you have a key agent running on the host machine. GitHub has [a page](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) on using a ssh-agent on different 
+The VM is setup to forward SSH keys to an agent that's running on the host machine. That means you can deploy from your Hyrax VM to a remote server if your Hyrax application is configured to do that and 
+you have a key agent running on the host machine. GitHub has [a page](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) on setting up ssh-agent on different 
 platforms if you've not done this before.
 
 ### License
