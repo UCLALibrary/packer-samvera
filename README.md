@@ -75,6 +75,12 @@ You can then SSH in if you want to poke around further:
 If you want to interact with the box's services, you can see the passwords for them in the sample-config.json file from this project's root directory. You can also change characteristics of the Vagrant 
 Box (for instance, memory, etc.) in the Vagrantfile that is downloaded in the `vagrant init` step.
 
+### Deploying from VM to a Remote Server
+
+The VM is setup to forward SSH keys to an agent that's running on the host machine. That means you can deploy from your Hyrax VM to a remote server if your Hyrax application is configured to do that 
+and you have a key agent running on the host machine. GitHub has [a page](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) on using a ssh-agent on different 
+platforms if you've not done this before.
+
 ### License
 
 [BSD-3-Clause](LICENSE.txt)
