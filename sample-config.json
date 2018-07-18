@@ -4,6 +4,8 @@
   "aws_region": "us-east-1",
   "samvera_db_user": "demo_db_user",
   "samvera_db_password": "demo_db_password",
+  "fcdb_user": "demo_fc_user",
+  "fcdb_password": "demo_fc_password",
   "root_db_password": "demo_root_db_password",
   "timezone": "America/Los_Angeles",
   "hostname": "localhost",
