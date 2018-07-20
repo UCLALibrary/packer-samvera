@@ -15,3 +15,5 @@ builds/virtualbox/*.vmdk
 builds/virtualbox/*/
 vagrant/base/.vagrant
 vagrant/hyrax/.vagrant
+vagrant/hyrax/vm
+vagrant/hyrax/vagrant-config.yaml

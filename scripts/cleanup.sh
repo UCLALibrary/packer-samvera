@@ -1,5 +1,6 @@
 #! /bin/bash
 
 # Do some general cleanup
-rm -rf ~/install
-rm nodesource_setup.sh
+cd /home/vagrant
+rm -rf install
+rm -f nodesource_setup.sh

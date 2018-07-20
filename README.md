@@ -14,8 +14,14 @@ There are currently two possible outputs from this Packer Samvera build: an AWS 
 Bash is required to run the wrapper script. [Packer](https://www.packer.io/downloads.html) is required to run the build. And, [jq](https://stedolan.github.io/jq/download/) is required to work around a 
 [Packer limitation](https://github.com/hashicorp/packer/issues/2679).
 
-There are also some optional requirements, depending on the type of output you desire: an AWS account if you want to create AMIs, Vagrant and VirtualBox installed on your local machine if you want to use 
-Vagrant, and Docker installed on your local machine if you want to use Docker.
+There are also some optional requirements, depending on the type of output you desire:
+* An AWS account if you want to create AMIs
+* Vagrant and VirtualBox installed on your local machine if you want to use Vagrant
+
+If you decide to use Vagrant, you'll also need to install a few additional things on your host system:
+* An SSH agent to handle GitHub commits and deploying to a remote server (GitHub has [a page on setting up 
+ssh-agent](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) on different platforms if you've not done this before)
+* SSHFS and the Vagrant SSHFS plugin to expose the Hyrax source code to your host machine (How you install these will vary depending on your OS, but both are available in the Ubuntu repositories)
 
 ## Getting Started
 
@@ -51,7 +57,7 @@ After that you can bring it up and, if you want, SSH into it:
     vagrant up
     vagrant ssh
 
-Hyrax is exposed on http://localhost:8080 and Solr on http://localhost:8983/solr.
+Hyrax is exposed at http://localhost:8080, Fedora at http://localhost:8181/fedora/rest, and Solr at http://localhost:8983/solr.
 
 In case you were wondering what happened to `vagrant init` in the above steps... by changing into the `vagrant/hyrax` directory, we changed into the directory that has the box's Vagrantfile. If you use 
 the prebuilt version of samvera-hyrax, mentioned below, you would also need to run `vagrant init` to get a local copy of the Vagrantfile.
@@ -75,16 +81,10 @@ You can then SSH in if you want to poke around further:
 If you want to interact with the box's services, you can see the passwords for them in the sample-config.json file from this project's root directory. You can also change characteristics of the Vagrant 
 Box (for instance, memory, etc.) in the Vagrantfile that is downloaded in the `vagrant init` step.
 
-### Deploying from VM to a Remote Server
-
-The VM is setup to forward SSH keys to an agent that's running on the host machine. That means you can deploy from your Hyrax VM to a remote server if your Hyrax application is configured to do that and 
-you have a key agent running on the host machine. GitHub has [a page](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/) on setting up ssh-agent on different 
-platforms if you've not done this before.
-
 ### License
 
 [BSD-3-Clause](LICENSE.txt)
 
 ### Contacts
 
-Kevin S. Clarke &lt;<a href="mailto:ksclarke@ksclarke.io">ksclarke@ksclarke.io</a>&gt;
+If you have any questions, suggestions, comments, etc., about the build feel free to send them to Kevin S. Clarke &lt;<a href="mailto:ksclarke@ksclarke.io">ksclarke@ksclarke.io</a>&gt;

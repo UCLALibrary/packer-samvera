@@ -108,22 +108,38 @@
     },
     {
       "type": "shell",
+      "only": [ "box" ],
+      "script": "scripts/git-config-ssh.sh",
+      "environment_vars": [ "PROJECT_NAME={{ user `project_name` }}" ]
+    },
+    {
+      "type": "shell",
       "only": [ "ami", "box" ],
       "execute_command": "echo 'vagrant' | {{ .Vars }} /usr/bin/sudo -S -E bash '{{ .Path }}'",
-      "script": "scripts/cleanup.sh"
+      "scripts": [
+        "scripts/git-config.sh",
+        "scripts/cleanup.sh"
+      ],
+      "environment_vars": [ "PROJECT_NAME={{ user `project_name` }}" ]
+    },
+    {
+      "type": "shell-local",
+      "only": [ "box" ],
+      "command": "scripts/vagrant-config.sh"
     }
   ],
   "post-processors": [
     [{
       "type": "vagrant",
       "only": [ "box" ],
+      "include": "vagrant/hyrax/vagrant-config.yaml",
       "output": "builds/vagrant/samvera-hyrax.box",
       "vagrantfile_template": "vagrant/hyrax/Vagrantfile"
     },
     {
       "type": "vagrant-cloud",
       "only": [ "box" ],
-      "box_tag": "{{ user `vagrant_cloud_user` }}/samvera-hyrax",
+      "box_tag": "{{ user `vagrant_cloud_user` }}/{{ user `project_name` }}",
       "access_token": "{{ user `vagrant_cloud_token` }}",
       "version": "{{ user `vagrant_version` }}"
     }]

@@ -1,23 +1,23 @@
 
+require 'yaml'
+
+current_dir = File.dirname(File.expand_path(__FILE__))
+configs = YAML.load_file("#{current_dir}/vagrant-config.yaml")
+
 Vagrant.configure("2") do |config|
   config.vm.box = "ksclarke/samvera-hyrax"
   config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network "forwarded_port", guest: 8080, host: 8181
   config.vm.network "forwarded_port", guest: 8983, host: 8983
 
-#  config.vm.synced_folder ".", "/vagrant", disabled: true
-
-#  pub_key = `cat ~/.ssh/id_rsa.pub`
-
-#  config.vm.provision "shell", inline: <<-EOC
-#    echo '#{pub_key}' >> /home/vagrant/.ssh/authorized_keys
-#    sudo sed -i -e "\\#PasswordAuthentication yes# s#PasswordAuthentication yes#PasswordAuthentication no#g" /etc/ssh/sshd_config
-#    sudo service ssh restart
-#  EOC
+  config.vm.synced_folder "vm/", "/home/vagrant/" + configs['project_name'], create: true, type: "sshfs", reverse: true
 
   config.ssh.forward_agent = true
+  config.ssh.shell="bash"
 
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "2048"
   end
 
 end
+
