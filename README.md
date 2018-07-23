@@ -1,7 +1,6 @@
 # Packer Samvera
 
-An experimental project to build Samvera/Hyrax using Packer. Things aren't the way they'd ideally be, but my focus at this point is on incremental progress. I'm new to the Samvera-Hyrax space so I'm 
-using this project as a learning tool.
+An experimental project to build Samvera/Hyrax using Packer. Things aren't the way they'd ideally be, but my focus at this point is on incremental progress. I'm new to the Samvera-Hyrax space so I'm using this project as a learning tool.
 
 In the end, I'd like to see the option of an all-in-one box or a collection of service-specific boxes (with an orchestration piece) but, right now, an all-in-one box is what's built.
 
@@ -25,11 +24,9 @@ ssh-agent](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-
 
 ## Getting Started
 
-Copy the `sample-config.json` file to `config.json` and add or change its variables as needed. You can skip variables that aren't relevant to your build (e.g. AWS credentials if you're building a Vagrant 
-box).
+Copy the `sample-config.json` file to `config.json` and add or change its variables as needed. You can skip variables that aren't relevant to your build (e.g. AWS credentials if you're building a Vagrant box).
 
-The Packer build is basically done in two steps. The first builds a "base box" with all the necessary system dependencies installed and the second installs a Hyrax application from a GitHub repo. The 
-default Hyrax application is Nurax, which if I understand correctly is a snapshot/sandbox environment.
+The Packer build is basically done in two steps. The first builds a "base box" with all the necessary system dependencies installed and the second installs a Hyrax application from a GitHub repo. The default Hyrax application is Nurax, which if I understand correctly is a snapshot/sandbox environment.
 
 ### How to Build a Samvera-Hyrax AWS AMI (In Two Steps)
 
@@ -59,8 +56,7 @@ After that you can bring it up and, if you want, SSH into it:
 
 Hyrax is exposed at http://localhost:8080, Fedora at http://localhost:8181/fedora/rest, and Solr at http://localhost:8983/solr.
 
-In case you were wondering what happened to `vagrant init` in the above steps... by changing into the `vagrant/hyrax` directory, we changed into the directory that has the box's Vagrantfile. If you use 
-the prebuilt version of samvera-hyrax, mentioned below, you would also need to run `vagrant init` to get a local copy of the Vagrantfile.
+In case you were wondering what happened to `vagrant init` in the above steps... by changing into the `vagrant/hyrax` directory, we changed into the directory that has the box's Vagrantfile. If you use the prebuilt version of samvera-hyrax, mentioned below, you would also need to run `vagrant init` to get a local copy of the Vagrantfile.
 
 ### But I Don't Want to Build Anything
 
@@ -78,8 +74,11 @@ You can then SSH in if you want to poke around further:
 
     vagrant ssh
 
-If you want to interact with the box's services, you can see the passwords for them in the sample-config.json file from this project's root directory. You can also change characteristics of the Vagrant 
-Box (for instance, memory, etc.) in the Vagrantfile that is downloaded in the `vagrant init` step.
+If you want to interact with the box's services, you can see the passwords for them in the sample-config.json file from this project's root directory. You can also change characteristics of the Vagrant Box (for instance, memory, etc.) in the Vagrantfile that is downloaded in the `vagrant init` step.
+
+### Gotchas
+
+If your build hangs at the SSH connection (fwiw, this does usually take a really long time), you might want to try using Packer [version 1.2.2](https://releases.hashicorp.com/packer/1.2.2/). I suspect there is a bug with newer Packer versions that affects some platforms. I'm going to try and create a reproducible example and file a bug report with Packer but, in the meantime, try version 1.2.2 if you run into this problem.
 
 ### License
 
