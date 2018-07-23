@@ -10,8 +10,8 @@ createDotEnv() {
 
   echo "PROJECT_NAME=${1}" >> "/opt/${1}/shared/.env.${2}"
   echo "DATABASE_NAME=${3}" >> "/opt/${1}/shared/.env.${2}"
-  echo "DATABASE_USERNAME=${4}" >> "/opt/${1}/shared/.env.{2}"
-  echo "DATABASE_PASSWORD=${5}" >> "/opt/${1}/shared/.env.{2}"
+  echo "DATABASE_USERNAME=${4}" >> "/opt/${1}/shared/.env.${2}"
+  echo "DATABASE_PASSWORD=${5}" >> "/opt/${1}/shared/.env.${2}"
   echo "DATABASE_POOL_SIZE=25" >> "/opt/${1}/shared/.env.${2}"
   echo "GEONAMES_USERNAME=${6}" >> "/opt/${1}/shared/.env.${2}"
   echo "RAILS_SERVE_STATIC_FILES=true" >> "/opt/${1}/shared/.env.${2}"
