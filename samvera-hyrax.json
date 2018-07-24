@@ -56,7 +56,7 @@
       "ssh_pty": true,
       "ssh_wait_timeout": "10000s",
       "shutdown_command": "echo 'vagrant' | sudo -S shutdown -P now",
-      "vm_name": "samvera-hyrax",
+      "vm_name": "{{ user `project_name` }}",
       "guest_additions_mode": "disable",
       "vboxmanage": [
         [ "modifyvm", "{{ .Name }}", "--memory", "{{ user `vb_memory`  }}" ],
@@ -109,8 +109,15 @@
     {
       "type": "shell",
       "only": [ "box" ],
-      "script": "scripts/git-config-ssh.sh",
-      "environment_vars": [ "PROJECT_NAME={{ user `project_name` }}" ]
+      "execute_command": "echo 'vagrant' | {{ .Vars }} /usr/bin/sudo -S -E bash '{{ .Path }}'",
+      "scripts": [
+        "scripts/hyrax-dev-config.sh",
+        "scripts/git-config-ssh.sh"
+      ],
+      "environment_vars": [
+        "PROJECT_NAME={{ user `project_name` }}",
+        "ROOT_DB_PASSWORD={{ user `root_db_password` }}"
+      ]
     },
     {
       "type": "shell",
@@ -125,7 +132,7 @@
     {
       "type": "shell-local",
       "only": [ "box" ],
-      "command": "scripts/vagrant-config.sh"
+      "command": "PROJECT_NAME={{ user `project_name` }} PROJECT_OWNER={{ user `project_owner` }} scripts/vagrant-config.sh"
     }
   ],
   "post-processors": [
@@ -133,7 +140,7 @@
       "type": "vagrant",
       "only": [ "box" ],
       "include": "vagrant/hyrax/vagrant-config.yaml",
-      "output": "builds/vagrant/samvera-hyrax.box",
+      "output": "builds/vagrant/{{ user `project_name` }}.box",
       "vagrantfile_template": "vagrant/hyrax/Vagrantfile"
     },
     {

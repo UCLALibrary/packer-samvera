@@ -129,6 +129,8 @@
         "-e \"samvera_db_password={{ user `samvera_db_password` }}\"",
         "-e \"fcdb_user={{ user `fcdb_user` }}",
         "-e \"fcdb_pass={{ user `fcdb_password` }}",
+        "-e \"os_user=vagrant",
+        "-e \"os_password=vagrant",
         "-e \"postgres_pass={{ user `root_db_password` }}\"",
         "-e \"timezone={{ user `timezone` }}\"",
         "-e \"hostname={{ user `hostname` }}\"",
