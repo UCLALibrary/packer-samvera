@@ -8,7 +8,7 @@ configs = YAML.load_file("#{current_dir}/vagrant-config.yaml")
 
 # before we even start, let's check to see if the vagrant-sshfs plugin is installed
 unless Vagrant.has_plugin?('vagrant-sshfs')
-  raise 'required plugin vagrant-sshfs is not installed! \nRecommended action: \ninstall the plugin with the following command:\n\n  vagrant plugin install vagrant-sshfs\n'
+    raise 'required plugin vagrant-sshfs is not installed! \nRecommended action: \ninstall the plugin with the following command:\n\n  vagrant plugin install vagrant-sshfs\n\nGentle reminder: also be sure to install the SSHFS package on your host OS.'
 end
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
@@ -35,11 +35,11 @@ Vagrant.configure("2") do |config|
   # https://github.com/fgrehm/vagrant-notify
   # NOTE: Currently this plugin only works on Linux or OSX hosts
   if Vagrant.has_plugin?('vagrant-notify')
-      config.vm.provision :shell, :inline => "notify-send --urgency=critical -t 20000 'Vagrant-Samvera-mgmt is up! Get back to work! :-)'", run: "always"
+      config.vm.provision :shell, :inline => "notify-send --urgency=critical -t 20000 " + configs['project_name'] + " is up! Get back to work! :-)'", run: "always"
   end
 
   # Message to display to user after 'vagrant up' completes
-  config.vm.post_up_message = "Setup of 'vagrant-samvera-mgmt is now COMPLETE!\nYou can SSH into the new VM via 'vagrant ssh'"
+  config.vm.post_up_message = "Setup of " + configs['project_name'] + " is now COMPLETE!\nYou can SSH into the new VM via 'vagrant ssh'"
 
 end
 
