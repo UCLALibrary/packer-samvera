@@ -10,7 +10,7 @@
     - { role: ansible-samvera/roles/setup_logrotation, project_name: "{{ project_name }}" }
     - { role: ansible-samvera/roles/clamav }
     - { role: ansible-samvera/roles/ruby, ruby_version: '2.4.2', ruby_sha_256: '93b9e75e00b262bc4def6b26b7ae8717efc252c47154abb7392e54357e6c8c9c' }
-    - { role: ansible-samvera/roles/postgres, postgres_pass: "{{ root_db_password }}", db_user: "{{ samvera_db_user }}", db_pass: "{{ samvera_db_password }}" }
+    - { role: ansible-samvera/roles/postgres, postgres_pass: "{{ root_db_password }}", db_user: "{{ samvera_db_user }}", db_pass: "{{ samvera_db_password }}", system_user: "{{ os_user }}", system_password: "{{ os_password }}" }
     - { role: ansible-samvera/roles/fedora, fedora_version: '4.7.1' }
     - { role: ansible-samvera/roles/solr, solr_version: '6.6.2' }
     - { role: ansible-samvera/roles/fits, fits_version: '0.8.4' }

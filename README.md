@@ -44,10 +44,10 @@ The second step can be run independently (and repeatedly) once the first has bee
 
 ### How to Use the Samvera-Hyrax Vagrant Box
 
-The first thing you'll want to do after building is to add the box to your local Vagrant environment:
+The first thing you'll want to do after building is to add the box to your local Vagrant environment (using the `project_owner` and `project_name` values from your config.json file):
 
     cd vagrant/hyrax
-    vagrant box add ksclarke/samvera-hyrax ../../builds/vagrant/samvera-hyrax.box
+    vagrant box add ${PROJECT_OWNER}/${PROJECT_NAME} ../../builds/vagrant/${PROJECT_NAME}.box
 
 After that you can bring it up and, if you want, SSH into it:
 
