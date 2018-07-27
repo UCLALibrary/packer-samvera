@@ -35,7 +35,7 @@ Vagrant.configure("2") do |config|
   # https://github.com/fgrehm/vagrant-notify
   # NOTE: Currently this plugin only works on Linux or OSX hosts
   if Vagrant.has_plugin?('vagrant-notify')
-      config.vm.provision :shell, :inline => "notify-send --urgency=critical -t 20000 " + configs['project_name'] + " is up! Get back to work! :-)'", run: "always"
+      config.vm.provision :shell, :inline => "notify-send --urgency=critical -t 20000 " + configs['project_name'] + " is up!", run: "always"
   end
 
   # Message to display to user after 'vagrant up' completes
