@@ -99,7 +99,7 @@
       "guest_additions_sha256": "{{ user `vagrant_guest_additions_iso_sha256_checksum` }}",
       "virtualbox_version_file": ".vbox_version",
       "output_directory": "builds/virtualbox/{{ user `runid` }}",
-      "vm_name": "samvera-base",
+      "vm_name": "{{ user `project_name` }}-base",
       "vboxmanage": [
         [ "modifyvm", "{{ .Name }}", "--memory", "{{ user `vb_memory` }}" ],
         [ "modifyvm", "{{ .Name }}", "--cpus", "{{ user `vb_cpu_cores` }}" ]
@@ -169,14 +169,14 @@
     [{
       "type": "vagrant",
       "only": [ "box" ],
-      "output": "builds/vagrant/samvera-base.box",
+      "output": "builds/vagrant/{{ user `project_name` }}-base.box",
       "vagrantfile_template": "vagrant/base/Vagrantfile",
       "keep_input_artifact": true
     },
     {
       "type": "vagrant-cloud",
       "only": [ "box" ],
-      "box_tag": "{{ user `vagrant_cloud_user` }}/samvera-base",
+      "box_tag": "{{ user `vagrant_cloud_user` }}/{{ user `project_name` }}-base",
       "access_token": "{{ user `vagrant_cloud_token` }}",
       "version": "{{ user `build_version` }}-{{ timestamp }}"
     },

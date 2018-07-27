@@ -48,7 +48,7 @@
     {
       "type": "virtualbox-ovf",
       "name": "box",
-      "source_path": "builds/virtualbox/samvera-base.ovf",
+      "source_path": "builds/virtualbox/{{ user `project_name` }}-base.ovf",
       "headless": true,
       "ssh_username": "vagrant",
       "ssh_password": "vagrant",
