@@ -24,6 +24,12 @@ trap cleanup ERR
 # Make sure we're running from the right directory
 cd "${PROJECT_DIR}"
 
+# Confirm that jq is installed on the system
+hash jq 2>/dev/null || {
+  echo >&2 "jq must be installed to run this script: https://stedolan.github.io/jq/download/"
+  exit 1
+}
+
 # Set variables from our project config file
 PROJECT_OWNER=$(jq --raw-output '.project_owner' config.json)
 PROJECT_NAME=$(jq --raw-output '.project_name' config.json)
