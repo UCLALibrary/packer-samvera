@@ -26,12 +26,6 @@ chown deploy:deploy /var/www/
 
 # We can use the system env instead of dotenv since our box has a specific purpose
 echo "export SECRET_KEY_BASE=$SECRET_KEY_BASE" >> /etc/environment
-echo "export DB_USERNAME=$DB_USERNAME" >> /etc/environment
-echo "export DB_PASSWORD=$DB_PASSWORD" >> /etc/environment
-echo "export DB_NAME=$DB_NAME" >> /etc/environment
-echo "export DATABASE_USERNAME=$DB_USERNAME" >> /etc/environment
-echo "export DATABASE_PASSWORD=$DB_PASSWORD" >> /etc/environment
-echo "export DATABASE_NAME=$DB_NAME" >> /etc/environment
 echo "export BRANCH=$GITHUB_BRANCH" >> /etc/environment
 echo "export PROJECT_NAME=$PROJECT_NAME" >> /etc/environment
 echo "export PROJECT_OWNER=$PROJECT_OWNER" >> /etc/environment
@@ -40,5 +34,5 @@ echo "export GEONAMES_USERNAME=$GEONAMES_USERNAME" >> /etc/environment
 mkdir -p "/opt/${PROJECT_NAME}/shared"
 
 createDotEnv "$PROJECT_NAME" "production" "$DB_NAME" "$DB_USERNAME" "$DB_PASSWORD" "$GEONAMES_USERNAME"
-createDotEnv "$PROJECT_NAME" "test" "$DB_NAME" "$DB_USERNAME" "$DB_PASSWORD" "$GEONAMES_USERNAME"
-createDotEnv "$PROJECT_NAME" "development" "$DB_NAME" "$DB_USERNAME" "$DB_PASSWORD" "$GEONAMES_USERNAME"
+createDotEnv "$PROJECT_NAME" "test" "${DB_NAME}_test" "$DB_USERNAME" "$DB_PASSWORD" "$GEONAMES_USERNAME"
+createDotEnv "$PROJECT_NAME" "development" "${DB_NAME}_development" "$DB_USERNAME" "$DB_PASSWORD" "$GEONAMES_USERNAME"
