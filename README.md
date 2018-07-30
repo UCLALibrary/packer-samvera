@@ -37,8 +37,8 @@ The second step can be run independently (and repeatedly) once the first has bee
 
 ### How to Build a Samvera-Hyrax Vagrant Box (In Two Steps)
 
-    ./build.sh base vagrant
-    ./build.sh hyrax vagrant
+    ./build.sh base box
+    ./build.sh hyrax box
 
 The second step can be run independently (and repeatedly) once the first has been successfully run.
 
