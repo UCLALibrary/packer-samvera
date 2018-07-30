@@ -10,7 +10,7 @@ PACKER_ACTION="${PACKER_ACTION:-build}"
 if [ "$PACKER_ACTION" == "validate" ]; then
   ON_ERROR=""
 else
-  ON_ERROR="-on-error=\"ask\""
+  ON_ERROR="-on-error=ask"
 fi
 
 # Turn on verbose Packer logging by setting: PACKER_LOG=true
