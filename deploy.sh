@@ -7,6 +7,12 @@
 # Override the default action (Cf. `packer -h` for options)
 PACKER_ACTION="${PACKER_ACTION:-build}"
 
+if [ "$PACKER_ACTION" == "validate" ]; then
+  ON_ERROR=""
+else
+  ON_ERROR="-on-error=\"ask\""
+fi
+
 # Turn on verbose Packer logging by setting: PACKER_LOG=true
 PACKER_LOG="${PACKER_LOG:-0}"
 
@@ -66,7 +72,7 @@ if [ -z "$1" ] && [ -z "$2" ]; then
   printUsage
 elif [ "$2" == "ami" ] || [ "$2" == "box" ]; then
   if [ "$1" == "base" ] || [ "$1" == "hyrax" ]; then
-    PACKER_LOG="$PACKER_LOG" packer "$PACKER_ACTION" -only="$2" -var-file=config.json -on-error="ask" \
+    PACKER_LOG="$PACKER_LOG" packer "$PACKER_ACTION" -only="$2" -var-file=config.json $ON_ERROR \
       -var="vb_memory=$VB_MEMORY" -var="vb_cpu_cores=$VB_CPU_CORES" samvera-${1}.json
   else
     printUsage
