@@ -39,7 +39,6 @@ Vagrant.configure("2") do |config|
   end
 
   # Message to display to user after 'vagrant up' completes
-  config.vm.post_up_message = "Setup of " + configs['project_name'] + " is now COMPLETE!\nYou can SSH into the new VM via 'vagrant ssh'"
-
+  config.vm.post_up_message = "Setup of " + configs['project_name'] + " is now COMPLETE!\nYou can SSH into the new VM via 'vagrant ssh'\n\nNote: To push to GitHub or deploy to a remote server,\nyou must have ssh-agent installed on your host machine"
 end
 
