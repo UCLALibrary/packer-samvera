@@ -6,3 +6,6 @@ sudo -u postgres PGPASSWORD="$ROOT_DB_PASSWORD" psql -c "CREATE USER vagrant WIT
 # Install databases specific to a developer's workstation
 cd "/home/vagrant/${PROJECT_NAME}"
 sudo -u vagrant bundle exec rake db:setup
+
+# Setup an alias for `bundle exec`
+echo -e "alias be=\"bundle exec\"\n" >> /home/vagrant/.bash_aliases
