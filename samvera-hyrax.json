@@ -78,7 +78,8 @@
         "PROJECT_OWNER={{ user `project_owner` }}",
         "PROJECT_NAME={{ user `project_name` }}",
         "GITHUB_BRANCH={{ user `project_version` }}",
-        "GEONAMES_USERNAME={{ user `geonames_username` }}"
+        "GEONAMES_USERNAME={{ user `geonames_username` }}",
+        "ADMIN_PASSWORD={{ user `samvera_admin_password` }}"
       ]
     },
     {
@@ -116,7 +117,8 @@
       ],
       "environment_vars": [
         "PROJECT_NAME={{ user `project_name` }}",
-        "ROOT_DB_PASSWORD={{ user `root_db_password` }}"
+        "ROOT_DB_PASSWORD={{ user `root_db_password` }}",
+        "ADMIN_PASSWORD={{ user `samvera_admin_password` }}"
       ]
     },
     {
