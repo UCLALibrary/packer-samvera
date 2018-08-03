@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 8080, host: 8181
   config.vm.network "forwarded_port", guest: 8983, host: 8983
 
-  config.vm.synced_folder "vm/", "/home/vagrant/" + configs['project_name'], create: true, type: "sshfs", reverse: true
+  config.vm.synced_folder configs['project_name'], "/home/vagrant/" + configs['project_name'], create: true, type: "sshfs", reverse: true
 
   config.ssh.forward_agent = true
   config.ssh.shell="bash"
