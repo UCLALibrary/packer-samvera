@@ -33,6 +33,14 @@ echo "export PROJECT_NAME=$PROJECT_NAME" >> /etc/environment
 echo "export PROJECT_OWNER=$PROJECT_OWNER" >> /etc/environment
 echo "export GEONAMES_USERNAME=$GEONAMES_USERNAME" >> /etc/environment
 
+if [[ ! -z "$FEDORA_DEVELOPMENT_URL" ]]; then
+  echo "export FEDORA_DEVELOPMENT_URL=\"$FEDORA_DEVELOPMENT_URL\"" >> /etc/environment
+fi
+
+if [[ ! -z "$SOLR_DEVELOPMENT_URL" ]]; then
+  echo "export SOLR_DEVELOPMENT_URL=\"$SOLR_DEVELOPMENT_URL\"" >> /etc/environment
+fi
+
 mkdir -p "/opt/${PROJECT_NAME}/shared"
 
 createDotEnv "$PROJECT_NAME" "production" "$DB_NAME" "$DB_USERNAME" "$DB_PASSWORD" "$GEONAMES_USERNAME" "$ADMIN_PASSWORD"

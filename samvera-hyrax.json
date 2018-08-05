@@ -79,7 +79,9 @@
         "PROJECT_NAME={{ user `project_name` }}",
         "GITHUB_BRANCH={{ user `project_version` }}",
         "GEONAMES_USERNAME={{ user `geonames_username` }}",
-        "ADMIN_PASSWORD={{ user `samvera_admin_password` }}"
+        "ADMIN_PASSWORD={{ user `samvera_admin_password` }}",
+        "FEDORA_DEVELOPMENT_URL=http://localhost:8080/fedora/rest",
+        "SOLR_DEVELOPMENT_URL=http://localhost:8983/solr/{{ user `project_name` }}"
       ]
     },
     {
