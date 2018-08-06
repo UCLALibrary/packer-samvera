@@ -14,3 +14,6 @@ RAILS_ENV=test bundle exec rake db:setup
 
 # Setup an alias for `bundle exec`
 echo -e "alias be=\"bundle exec\"\n" >> /home/vagrant/.bash_aliases
+
+# This is a temporary workaround... log files should go to /var/log
+sudo chown -R vagrant:vagrant /home/vagrant/${PROJECT_NAME}/log
