@@ -78,14 +78,18 @@ You can then SSH in if you want to poke around further:
 
 If you want to interact with the box's services, you can see the passwords for them in the sample-config.json file from this project's root directory. You can also change characteristics of the Vagrant Box (for instance, memory, etc.) in the Vagrantfile that is downloaded in the `vagrant init` step.
 
-### Gotchas
+## Configuration
+
+The VirtualBox VM will, by default, use the `.gitconfig` and `.gitignore` files from the developer's host system. This saves the developer from having to configure Git on the guest VM, but it does mean that there may be differences between VMs from different developers. For instance, if one developer uses a lot of Git aliases, those will only exist on their guest VM. If that developer is working on a team, it would be important not to assume that another developer is using the same Git conveniences / configuration when talking about how one uses the VM.
+
+## Gotchas
 
 If your build hangs at the SSH connection (fwiw, this does usually take a really long time), you might want to try using Packer [version 1.2.2](https://releases.hashicorp.com/packer/1.2.2/). I suspect there is a bug with newer Packer versions that affects some platforms. I'm going to try and create a reproducible example and file a bug report with Packer but, in the meantime, try version 1.2.2 if you run into this problem.
 
-### License
+## License
 
 [BSD-3-Clause](LICENSE.txt)
 
-### Contacts
+## Contacts
 
 If you have any questions, suggestions, comments, etc., about the build feel free to send them to Kevin S. Clarke &lt;<a href="mailto:ksclarke@ksclarke.io">ksclarke@ksclarke.io</a>&gt;
