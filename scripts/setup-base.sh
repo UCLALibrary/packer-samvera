@@ -15,4 +15,4 @@ apt-get -y update
 apt-get -y install -f ansible
 
 # Setup some basics
-apt-get -y install nano htop git nmap curl wget tmux lynx nodejs
+apt-get -y install nano htop git nmap curl wget tmux tmuxinator lynx nodejs
