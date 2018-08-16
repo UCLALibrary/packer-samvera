@@ -19,7 +19,8 @@ end
 Vagrant.configure("2") do |config|
   config.vm.box = configs['project_owner'] + "/" + configs['project_name']
   config.vm.network "forwarded_port", guest: 80, host: 8080
-  config.vm.network "forwarded_port", guest: 8080, host: 8181
+  config.vm.network "forwarded_port", guest: 80, host: 3000
+  config.vm.network "forwarded_port", guest: 8080, host: 8984
   config.vm.network "forwarded_port", guest: 8983, host: 8983
 
   config.vm.synced_folder configs['project_name'], "/home/vagrant/" + configs['project_name'], create: true, type: "sshfs", reverse: true
