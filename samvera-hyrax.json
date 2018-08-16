@@ -1,5 +1,6 @@
 {
   "variables": {
+    "build_version": "",
     "aws_access_key": "",
     "aws_secret_key": "",
     "aws_region": "",
@@ -13,7 +14,6 @@
     "cap_deployment": "",
     "vagrant_cloud_token": "",
     "vagrant_cloud_user": "",
-    "vagrant_version": "0.0.1-{{ timestamp }}",
     "ubuntu_version": "16.04",
     "vagrant_source_iso": "ubuntu-16.04.4-server-amd64.iso",
     "vagrant_source_iso_sha256_checksum": "0a03608988cfd2e50567990dc8be96fb3c501e198e2e6efcb846d89efc7b89f2",
@@ -151,7 +151,7 @@
       "only": [ "box" ],
       "box_tag": "{{ user `vagrant_cloud_user` }}/{{ user `project_name` }}",
       "access_token": "{{ user `vagrant_cloud_token` }}",
-      "version": "{{ user `vagrant_version` }}"
+      "version": "{{ user `build_version` }}-{{ timestamp }}"
     }]
   ]
 }

@@ -4,6 +4,12 @@
 # A little wrapper Bash script to make building easier.
 #
 
+# Fail on first error
+set -e
+
+# Type artifacts we're versioning ("releases" or "tags")
+VERSION_TYPE="releases"
+
 # Override the default action (Cf. `packer -h` for options)
 PACKER_ACTION="${PACKER_ACTION:-build}"
 
@@ -68,12 +74,41 @@ hash jq 2>/dev/null || {
   exit 1
 }
 
+# Check that our build configuration exists
+if [ ! -f config.json ]; then
+  echo "The config.json file must exist before running the build. See the project README.md"
+  exit 1
+fi
+
+# Get variables we need to check the latest version
+PROJECT_NAME=$(cat config.json | jq -r '.project_name')
+PROJECT_OWNER=$(cat config.json | jq -r '.project_owner')
+PROJECT_VERSION=$(cat config.json | jq -r '.project_version')
+
+# Label a build artifact pushed to Vagrant Cloud with either SNAPSHOT or a tag/branch name
+if [ -z "$PROJECT_NAME" ] || [ -z "$PROJECT_OWNER" ]; then
+  echo "The config.json file is missing the project_owner and project_name variables"
+  exit 1
+else
+  BUILD_VERSION=$(curl --silent "https://api.github.com/repos/${PROJECT_OWNER}/${PROJECT_NAME}/${VERSION_TYPE}" | jq -r '.[0].name')
+
+  if [ "$PROJECT_VERSION" != 'HEAD' ] && [ "$PROJECT_VERSION" != 'master' ]; then
+    BUILD_VERSION="${BUILD_VERSION:1}-${PROJECT_VERSION}"
+  else
+    BUILD_VERSION="${BUILD_VERSION:1}-SNAPSHOT"
+  fi
+
+  PURPLE='\033[0;35m'
+  NC='\033[0m'
+  printf "${PURPLE}Building ${PROJECT_OWNER}/${PROJECT_NAME} ${BUILD_VERSION}${NC}\n\n"
+fi
+
 if [ -z "$1" ] && [ -z "$2" ]; then
   printUsage
 elif [ "$2" == "ami" ] || [ "$2" == "box" ]; then
   if [ "$1" == "base" ] || [ "$1" == "hyrax" ]; then
     PACKER_LOG="$PACKER_LOG" packer "$PACKER_ACTION" -only="$2" -var-file=config.json $ON_ERROR \
-      -var="vb_memory=$VB_MEMORY" -var="vb_cpu_cores=$VB_CPU_CORES" samvera-${1}.json
+      -var="vb_memory=$VB_MEMORY" -var="vb_cpu_cores=$VB_CPU_CORES" -var="build_version=$BUILD_VERSION" samvera-${1}.json
   else
     printUsage
   fi
