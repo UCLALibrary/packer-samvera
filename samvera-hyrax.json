@@ -128,7 +128,6 @@
       "only": [ "ami", "box" ],
       "execute_command": "echo 'vagrant' | {{ .Vars }} /usr/bin/sudo -S -E bash '{{ .Path }}'",
       "scripts": [
-        "scripts/git-config.sh",
         "scripts/cleanup.sh"
       ],
       "environment_vars": [ "PROJECT_NAME={{ user `project_name` }}" ]
