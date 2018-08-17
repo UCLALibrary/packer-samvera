@@ -50,7 +50,7 @@ vagrant up
 
 # Run some simple sanity checks
 curl -sSf "http://localhost:8080" > /dev/null
-curl -sSf "http://localhost:8181/fedora/rest" > /dev/null
+curl -sSf "http://localhost:8984/fedora/rest" > /dev/null
 curl -sSf "http://localhost:8983" > /dev/null
 
 # Run some more sophisticated checks inside the VM
