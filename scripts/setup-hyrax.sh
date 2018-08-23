@@ -18,6 +18,14 @@ createDotEnv() {
   echo "RAILS_SERVE_STATIC_FILES=true" >> "$ENV_FILE"
   echo "SIDEKIQ_WORKERS=7" >> "$ENV_FILE"
   echo "ADMIN_PASSWORD=${7}" >> "$ENV_FILE"
+
+  if [[ ! -z "${8}" ]]; then
+    echo "FEDORA_URL=${8}" >> "$ENV_FILE"
+  fi
+
+  if [[ ! -z "${9}" ]]; then
+    echo "SOLR_URL=${9}" >> "$ENV_FILE"
+  fi
 }
 
 # Ubuntu ISO doesn't have this by default
@@ -33,19 +41,11 @@ echo "export PROJECT_NAME=$PROJECT_NAME" >> /etc/environment
 echo "export PROJECT_OWNER=$PROJECT_OWNER" >> /etc/environment
 echo "export GEONAMES_USERNAME=$GEONAMES_USERNAME" >> /etc/environment
 
-if [[ ! -z "$FEDORA_DEVELOPMENT_URL" ]]; then
-  echo "export FEDORA_DEVELOPMENT_URL=\"$FEDORA_DEVELOPMENT_URL\"" >> /etc/environment
-fi
-
-if [[ ! -z "$SOLR_DEVELOPMENT_URL" ]]; then
-  echo "export SOLR_DEVELOPMENT_URL=\"$SOLR_DEVELOPMENT_URL\"" >> /etc/environment
-fi
-
 mkdir -p "/opt/${PROJECT_NAME}/shared"
 
-createDotEnv "$PROJECT_NAME" "production" "$DB_NAME" "$DB_USERNAME" "$DB_PASSWORD" "$GEONAMES_USERNAME" "$ADMIN_PASSWORD"
+createDotEnv "$PROJECT_NAME" "production" "$DB_NAME" "$DB_USERNAME" "$DB_PASSWORD" "$GEONAMES_USERNAME" "$ADMIN_PASSWORD" "$FEDORA_URL" "$SOLR_URL"
 createDotEnv "$PROJECT_NAME" "test" "${DB_NAME}_test" "$DB_USERNAME" "$DB_PASSWORD" "$GEONAMES_USERNAME" "$ADMIN_PASSWORD"
-createDotEnv "$PROJECT_NAME" "development" "$DB_NAME" "$DB_USERNAME" "$DB_PASSWORD" "$GEONAMES_USERNAME" "$ADMIN_PASSWORD"
+createDotEnv "$PROJECT_NAME" "development" "$DB_NAME" "$DB_USERNAME" "$DB_PASSWORD" "$GEONAMES_USERNAME" "$ADMIN_PASSWORD" "$FEDORA_URL" "$SOLR_URL"
 
 # Trying making the development the same as production since we don't have production on our dev box
 #createDotEnv "$PROJECT_NAME" "development" "${DB_NAME}_development" "$DB_USERNAME" "$DB_PASSWORD" "$GEONAMES_USERNAME" "$ADMIN_PASSWORD"
