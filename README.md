@@ -1,6 +1,6 @@
 # Packer Samvera
 
-A project to build a [Samvera/Hyrax](https://github.com/samvera/hyrax) developer's box using [Packer](https://www.packer.io/). Since we are new to the Samvera/Hyrax stack, we are learning as we go (i.e., this project is continually evolving). It's intended, though, as a general Samvera/Hyrax build process (so that one can reference their Hyrax application's GitHub repository and have the build work). There are obviously some [as of yet undocumented](https://github.com/UCLALibrary/packer-samvera/issues/28) conventions that need to be followed for the build to work.
+A project to build a [Samvera/Hyrax](https://github.com/samvera/hyrax) developer's box using [Packer](https://www.packer.io/). Since we are new to the Samvera/Hyrax stack, we are learning as we go (i.e., this project is continually evolving). It's intended, though, as a general Samvera/Hyrax build process (so that one can reference their Hyrax application's GitHub repository and have the build work). There are some [as of yet undocumented](https://github.com/UCLALibrary/packer-samvera/issues/28) conventions that need to be followed for the build to work. In the meantime, you can look at UCLA's [Californica](https://github.com/UCLALibrary/californica/) project as an example of a project that works with packer-samvera.
 
 FWIW (and to their credit), the heavy lifting of the packer-samvera build is currently done by Data Curation Experts' [ansible-samvera](https://github.com/curationexperts/ansible-samvera) project.
 
@@ -53,9 +53,9 @@ After that you can bring it up and, if you want, SSH into it:
     vagrant up
     vagrant ssh
 
-Hyrax is exposed at http://localhost:8080, Fedora at http://localhost:8181/fedora/rest, and Solr at http://localhost:8983/solr.
+Hyrax's Web application is exposed at http://localhost:8080 (and at http://localhost:3000 for those familar with Rails); Fedora is exposed at http://localhost:8984/fedora/rest; and, Solr is exposed at http://localhost:8983/solr.
 
-In case you were wondering what happened to `vagrant init` in the above steps... by changing into the `vagrant/hyrax` directory, we changed into the directory that has the box's Vagrantfile. If you use the prebuilt version of samvera-hyrax, mentioned below, you would also need to run `vagrant init` to get a local copy of the Vagrantfile.
+> Hint: In case you were wondering what happened to `vagrant init` in the above steps... by changing into the `vagrant/hyrax` directory, we changed into the directory that has the box's Vagrantfile. If you use the prebuilt version of samvera-hyrax, mentioned below, you would also need to run `vagrant init` to get a local copy of the Vagrantfile.
 
 ### But I Don't Want to Build Anything
 
@@ -80,7 +80,11 @@ If you want to interact with the box's services, you can see the passwords for t
 
 ## Configuration
 
+#### Git
 The VirtualBox VM will, by default, use the `.gitconfig` and `.gitignore` files from the developer's host system. This saves the developer from having to configure Git on the guest VM, but it does mean that there may be differences between VMs from different developers. For instance, if one developer uses a lot of Git aliases, those will only exist on their guest VM. If that developer is working on a team, it would be important not to assume that another developer is using the same Git conveniences / configuration when talking about how one uses the VM.
+
+#### Ports
+The VirtualBox VM's Web, search, and repository services are exposed, externally, at different ports from the ones they run at within the virtual machine. Inside the VM, these services run at port 80 (Hyrax), port 8080 (Fedora), and port 8983 (Solr). The services are exposed at different ports outside of the VM, though, to mirror what's in the upstream developer documentation (and to mirror what developers not currently using the virtual machine will be accustomed to expect). Outside the VM, from the perspective of the developer, the ports are 8080 for the Hyrax Web application, 8984 for Fedora, and 8983 for Solr.
 
 ## Gotchas
 
