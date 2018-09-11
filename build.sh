@@ -22,9 +22,6 @@ fi
 # Turn on verbose Packer logging by setting: PACKER_LOG=true
 PACKER_LOG="${PACKER_LOG:-0}"
 
-# We need to filter the JSON because Packer doesn't support tagged/conditional post-processors
-FILTER=(jq '.["post-processors"][0] |= map(select(.type != "vagrant-cloud"))' samvera-${1}.json)
-
 # Some conservative/safe build values
 DEFAULT_CORE_COUNT=2
 DEFAULT_MEMORY=2048
@@ -83,10 +80,19 @@ if [ ! -f config.json ]; then
   exit 1
 fi
 
-# Get variables we need to check the latest version
+# Get variables we need to check the latest version and desired distro
 PROJECT_NAME=$(cat config.json | jq -r '.project_name')
 PROJECT_OWNER=$(cat config.json | jq -r '.project_owner')
 PROJECT_VERSION=$(cat config.json | jq -r '.project_version')
+LINUX_DISTRO=$(cat config.json | jq -r '.linux_distro')
+
+# Check with Linux distro we want to use with the build
+if [ -z "$LINUX_DISTRO" ]; then
+  LINUX_DISTRO="ubuntu"
+elif [ "$LINUX_DISTRO" != "ubuntu" ] && [ "$LINUX_DISTRO" != "centos" ]; then
+  echo "Only valid options for 'linux_distro' at this point are 'centos' or 'ubuntu'"
+  exit 1
+fi
 
 # Label a build artifact pushed to Vagrant Cloud with either SNAPSHOT or a tag/branch name
 if [ -z "$PROJECT_NAME" ] || [ -z "$PROJECT_OWNER" ]; then
@@ -106,23 +112,28 @@ else
   printf "${PURPLE}Building ${PROJECT_OWNER}/${PROJECT_NAME} ${BUILD_VERSION}${NC}\n\n"
 fi
 
+# We need to filter the JSON because Packer doesn't support tagged/conditional post-processors
+FILTER=(jq '.["post-processors"][0] |= map(select(.type != "vagrant-cloud"))' samvera-${1}-${LINUX_DISTRO}.json)
+
 if [ -z "$1" ]; then
   printUsage
 elif [ "$2" == "ami" ] || [ "$2" == "box" ]; then
   if [ "$1" == "base" ] || [ "$1" == "hyrax" ]; then
      TMPFILE=$(mktemp)
-     "${FILTER[@]}" > $TMPFILE
+     "${FILTER[@]}" > "$TMPFILE"
      PACKER_LOG="$PACKER_LOG" packer "$PACKER_ACTION" -only="$2" -var-file="config.json" $ON_ERROR \
-       -var="vb_memory=$VB_MEMORY" -var="vb_cpu_cores=$VB_CPU_CORES" -var="build_version=$BUILD_VERSION" $TMPFILE
+       -var="linux_distro=$LINUX_DISTRO" -var="vb_memory=$VB_MEMORY" -var="vb_cpu_cores=$VB_CPU_CORES" \
+       -var="build_version=$BUILD_VERSION" "$TMPFILE"
   else
     printUsage
   fi
 elif [ "$2" == "fast" ] || [ -z "$2" ]; then
   if [ "$1" == "base" ] || [ "$1" == "hyrax" ]; then
      TMPFILE=$(mktemp)
-     "${FILTER[@]}" > $TMPFILE
+     "${FILTER[@]}" > "$TMPFILE"
      PACKER_LOG="$PACKER_LOG" packer "$PACKER_ACTION" -var-file="config.json" $ON_ERROR \
-       -var="vb_memory=$VB_MEMORY" -var="vb_cpu_cores=$VB_CPU_CORES" -var="build_version=$BUILD_VERSION" $TMPFILE
+       -var="linux_distro=$LINUX_DISTRO" -var="vb_memory=$VB_MEMORY" -var="vb_cpu_cores=$VB_CPU_CORES" \
+       -var="build_version=$BUILD_VERSION" "$TMPFILE"
   else
     printUsage
   fi

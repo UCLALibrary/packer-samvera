@@ -1,0 +1,169 @@
+{
+    "variables": {
+        "build_version": "",
+        "aws_access_key": "",
+        "aws_secret_key": "",
+        "aws_region": "",
+        "timezone": "",
+        "hostname": "",
+        "domain": "",
+        "project_name": "",
+        "project_owner": "",
+        "project_version": "",
+        "geonames_username": "",
+        "default_admin_password": "",
+        "cap_deployment": "",
+        "vagrant_cloud_token": "",
+        "vagrant_cloud_user": "",
+        "linux_distro": "",
+        "aws_source_ami": "FIXME",
+        "aws_ami_owner": "self",
+        "vb_memory": "4096",
+        "vb_cpu_cores": "2"
+    },
+    "builders": [{
+            "type": "amazon-ebs",
+            "name": "ami",
+            "access_key": "{{ user `aws_access_key` }}",
+            "secret_key": "{{ user `aws_secret_key` }}",
+            "region": "{{ user `aws_region` }}",
+            "source_ami_filter": {
+                "filters": {
+                    "virtualization-type": "hvm",
+                    "name": "{{ user `aws_source_ami` }}",
+                    "root-device-type": "ebs"
+                },
+                "owners": ["{{ user `aws_ami_owner` }}"],
+                "most_recent": true
+            },
+            "force_deregister": true,
+            "force_delete_snapshot": true,
+            "instance_type": "t2.medium",
+            "ssh_username": "ubuntu",
+            "ami_name": "{{ user `project_name` }}-hyrax-{{ user `linux_distro` }} {{ timestamp }}",
+            "ami_description": "A Hyrax AMI for {{ user `project_name` }} ({{ user `linux_distro` }})"
+        },
+        {
+            "type": "virtualbox-ovf",
+            "name": "box",
+            "source_path": "builds/virtualbox/{{ user `project_name` }}-base-{{ user `linux_distro` }}.ovf",
+            "headless": true,
+            "ssh_username": "vagrant",
+            "ssh_password": "vagrant",
+            "ssh_port": 22,
+            "ssh_pty": true,
+            "ssh_wait_timeout": "10000s",
+            "shutdown_command": "echo 'vagrant' | sudo -S /sbin/shutdown -P now",
+            "vm_name": "{{ user `project_name` }}-hyrax-{{ user `linux_distro` }}",
+            "guest_additions_mode": "disable",
+            "vboxmanage": [
+                ["modifyvm", "{{ .Name }}", "--memory", "{{ user `vb_memory`  }}"],
+                ["modifyvm", "{{ .Name }}", "--cpus", "{{ user `vb_cpu_cores` }}"]
+            ]
+        }
+    ],
+    "provisioners": [{
+            "type": "ansible-local",
+            "only": ["box"],
+            "playbook_file": "ansible/playbooks/samvera-hyrax-centos.yml",
+            "galaxy_file": "ansible/requirements/samvera-hyrax-centos.yaml",
+            "extra_arguments": [
+                "-e \"samvera_db_user={{ user `samvera_db_user` }}\"",
+                "-e \"samvera_db_password={{ user `samvera_db_password` }}\"",
+                "-e \"fc_admin_user={{ user `fc_admin_user` }}\"",
+                "-e \"fc_admin_password={{ user `fc_admin_password` }}\"",
+                "-e \"postgres_pass={{ user `root_db_password` }}\"",
+                "-e \"timezone={{ user `timezone` }}\"",
+                "-e \"hostname={{ user `hostname` }}\"",
+                "-e \"domain={{ user `domain` }}\"",
+                "-e \"project_name={{ user `project_name` }}\"",
+                "-e \"project_owner={{ user `project_owner` }}\"",
+                "-e \"cap_deployment={{ user `cap_deployment` }}\"",
+                "-e \"project_version={{ user `project_version` }}\"",
+                "-e \"default_contact_email={{ user `default_contact_email` }}\"",
+                "-e \"default_admin_password={{ user `default_admin_password` }} ansible_sudo_pass=vagrant\""
+            ]
+        },
+        {
+            "type": "ansible-local",
+            "only": ["ami"],
+            "playbook_file": "ansible/playbooks/samvera-hyrax-centos.yml",
+            "galaxy_file": "ansible/requirements/samvera-hyrax-centos.yaml",
+            "extra_arguments": [
+                "-e \"samvera_db_user={{ user `samvera_db_user` }}\"",
+                "-e \"samvera_db_password={{ user `samvera_db_password` }}\"",
+                "-e \"fc_admin_user={{ user `fc_admin_user` }}\"",
+                "-e \"fc_admin_password={{ user `fc_admin_password` }}\"",
+                "-e \"postgres_pass={{ user `root_db_password` }}\"",
+                "-e \"timezone={{ user `timezone` }}\"",
+                "-e \"hostname={{ user `hostname` }}\"",
+                "-e \"domain={{ user `domain` }}\"",
+                "-e \"project_name={{ user `project_name` }}\"",
+                "-e \"project_owner={{ user `project_owner` }}\"",
+                "-e \"cap_deployment={{ user `cap_deployment` }}\"",
+                "-e \"project_version={{ user `project_version` }}\"",
+                "-e \"default_contact_email={{ user `default_contact_email }}\"",
+                "-e \"default_admin_password={{ user `default_admin_password` }}\"",
+                "--sudo"
+            ]
+        },
+        {
+            "type": "shell",
+            "only": ["box"],
+            "execute_command": "echo 'vagrant' | {{ .Vars }} /usr/bin/sudo -S -E bash '{{ .Path }}'",
+            "scripts": [
+                "scripts/hyrax-dev-config.sh",
+                "scripts/git-config-ssh.sh"
+            ],
+            "environment_vars": [
+                "PROJECT_NAME={{ user `project_name` }}",
+                "ROOT_DB_PASSWORD={{ user `root_db_password` }}",
+                "ADMIN_PASSWORD={{ user `samvera_admin_password` }}"
+            ]
+        },
+        {
+            "type": "shell",
+            "only": ["ami", "box"],
+            "execute_command": "echo 'vagrant' | {{ .Vars }} /usr/bin/sudo -S -E bash '{{ .Path }}'",
+            "scripts": [
+                "scripts/setup-hyrax.sh",
+                "scripts/cleanup.sh"
+            ],
+            "environment_vars": [
+                "SECRET_KEY_BASE=asdf",
+                "DB_USERNAME={{ user `samvera_db_user` }}",
+                "DB_PASSWORD={{ user `samvera_db_password` }}",
+                "DB_NAME={{ user `project_name` }}",
+                "PROJECT_OWNER={{ user `project_owner` }}",
+                "PROJECT_NAME={{ user `project_name` }}",
+                "GITHUB_BRANCH={{ user `project_version` }}",
+                "GEONAMES_USERNAME={{ user `geonames_username` }}",
+                "ADMIN_PASSWORD={{ user `samvera_admin_password` }}",
+                "FEDORA_URL=http://localhost:8080/fedora/rest",
+                "SOLR_URL=http://localhost:8983/solr/{{ user `project_name` }}"
+            ]
+        },
+        {
+            "type": "shell-local",
+            "only": ["box"],
+            "command": "PROJECT_NAME={{ user `project_name` }} PROJECT_OWNER={{ user `project_owner` }} scripts/vagrant-config.sh"
+        }
+    ],
+    "post-processors": [
+        [{
+                "type": "vagrant",
+                "only": ["box"],
+                "include": "vagrant/hyrax/vagrant-config.yaml",
+                "output": "builds/vagrant/{{ user `project_name` }}-{{ user `linux_distro` }}.box",
+                "vagrantfile_template": "vagrant/hyrax/Vagrantfile"
+            },
+            {
+                "type": "vagrant-cloud",
+                "only": ["box"],
+                "box_tag": "{{ user `vagrant_cloud_user` }}/{{ user `project_name` }}-{{ user `linux_distro` }}",
+                "access_token": "{{ user `vagrant_cloud_token` }}",
+                "version": "{{ user `build_version` }}-{{ timestamp }}"
+            }
+        ]
+    ]
+}

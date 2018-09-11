@@ -1,0 +1,31 @@
+- hosts: all
+  name: Configure server
+  user: vagrant
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+  vars:
+    project_name: "{{ project_name }}"
+    project_owner: "{{ project_owner }}"
+    git_repo_url: "https://github.com/{{ project_owner }}/{{ project_name }}.git"
+    git_repo_branch: "{{ project_version }}"
+    cap_deployment: "{{ cap_deployment }}"
+    project_default_admin_password: "{{ default_admin_password }}"
+    contact_email_addr: "{{ default_contact_email }}"
+    solr_index_url: "http://localhost:8983/solr/{{ project_name }}"
+    redis_host: "localhost"
+    redis_port: "6379"
+    sidekiq_num_threads: "5"
+    rails_db_user: "{{ samvera_db_user }}"
+    rails_db_pass: "{{ samvera_db_password }}"
+    rails_host_fqdn: "{{ hostname }}"
+    rails_db_adapter: "mysql2"
+    rails_db_pool: "5"
+    rails_db_host: "localhost"
+    rails_db_name: "{{ project_name }}"
+    fedora_repo_url: "http://localhost:8080/fcrepo/rest"
+    fedora_repo_user: "{{ fc_admin_user }}"
+    fedora_repo_password: "{{ fc_admin_password }}"
+    enable_ssl: "no"
+  roles:
+    - { role: uclalib_role_samvera_capdeploy }

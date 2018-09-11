@@ -20,5 +20,6 @@
   "vagrant_cloud_user": "",
   "ssh_keys_to_add": "['https://github.com/ksclarke.keys','https://github.com/bess.keys','https://github.com/mark-dce.keys','https://github.com/hardyoyo.keys']",
   "docker_user": "",
-  "geonames_username": "YOUR_GEONAMES_USERNAME_HERE"
+  "geonames_username": "YOUR_GEONAMES_USERNAME_HERE",
+  "linux_distro": "centos"
 }

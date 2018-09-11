@@ -1,0 +1,192 @@
+{
+    "variables": {
+        "build_version": "",
+        "aws_access_key": "",
+        "aws_secret_key": "",
+        "aws_region": "",
+        "samvera_db_user": "",
+        "samvera_db_password": "",
+        "fcdb_user": "",
+        "fcdb_password": "",
+        "root_db_password": "",
+        "timezone": "",
+        "hostname": "",
+        "domain": "",
+        "project_name": "",
+        "ssh_keys_to_add": "",
+        "vagrant_cloud_token": "",
+        "vagrant_cloud_user": "",
+        "ubuntu_version": "16.04",
+        "vagrant_source_iso": "ubuntu-16.04.4-server-amd64.iso",
+        "vagrant_source_iso_sha256_checksum": "0a03608988cfd2e50567990dc8be96fb3c501e198e2e6efcb846d89efc7b89f2",
+        "vagrant_guest_additions_iso": "http://download.virtualbox.org/virtualbox/5.2.8/VBoxGuestAdditions_5.2.8.iso",
+        "vagrant_guest_additions_iso_sha256_checksum": "80b6b4a6c6789fd5957d07562dd2bdd89dd2abd99cb588e15b784ed89b680813",
+        "aws_source_ami": "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*",
+        "aws_ami_owner": "099720109477",
+        "vb_memory": "4096",
+        "vb_cpu_cores": "",
+        "runid": "{{env `PACKER_RUN_UUID`}}",
+        "linux_distro": ""
+    },
+    "builders": [{
+            "type": "amazon-ebs",
+            "name": "ami",
+            "access_key": "{{ user `aws_access_key` }}",
+            "secret_key": "{{ user `aws_secret_key` }}",
+            "region": "{{ user `aws_region` }}",
+            "source_ami_filter": {
+                "filters": {
+                    "virtualization-type": "hvm",
+                    "name": "{{ user `aws_source_ami` }}",
+                    "root-device-type": "ebs"
+                },
+                "owners": ["{{ user `aws_ami_owner` }}"],
+                "most_recent": true
+            },
+            "force_deregister": true,
+            "force_delete_snapshot": true,
+            "instance_type": "t2.medium",
+            "ssh_username": "ubuntu",
+            "ami_name": "{{ user `project_name` }}-base-{{ user `linux_distro` }} {{ timestamp }}",
+            "ami_description": "A base box for {{ user `project_name` }} ({{ user `linux_distro` }})"
+        },
+        {
+            "type": "virtualbox-iso",
+            "name": "box",
+            "boot_command": [
+                "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "/install/vmlinuz<wait>",
+                " auto<wait>",
+                " console-setup/ask_detect=false<wait>",
+                " console-setup/layoutcode=us<wait>",
+                " console-setup/modelcode=pc105<wait>",
+                " debconf/frontend=noninteractive<wait>",
+                " debian-installer=en_US<wait>",
+                " fb=false<wait>",
+                " initrd=/install/initrd.gz<wait>",
+                " kbd-chooser/method=us<wait>",
+                " keyboard-configuration/layout=USA<wait>",
+                " keyboard-configuration/variant=USA<wait>",
+                " locale=en_US<wait>",
+                " netcfg/get_domain=vm<wait>",
+                " netcfg/get_hostname=vagrant<wait>",
+                " grub-installer/bootdev=/dev/sda<wait>",
+                " noapic<wait>",
+                " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg",
+                " -- <wait>",
+                "<enter><wait>"
+            ],
+            "boot_wait": "10s",
+            "disk_size": 81920,
+            "guest_os_type": "Ubuntu_64",
+            "headless": true,
+            "http_directory": "http",
+            "iso_urls": [
+                "/ISOs/{{ user `vagrant_source_iso` }}",
+                "http://releases.ubuntu.com/{{ user `ubuntu_version` }}/{{ user `vagrant_source_iso` }}"
+            ],
+            "iso_checksum_type": "sha256",
+            "iso_checksum": "{{ user `vagrant_source_iso_sha256_checksum` }}",
+            "ssh_username": "vagrant",
+            "ssh_password": "vagrant",
+            "ssh_port": 22,
+            "ssh_wait_timeout": "10000s",
+            "shutdown_command": "echo 'vagrant' | sudo -S shutdown -P now",
+            "guest_additions_url": "{{ user `vagrant_guest_additions_iso` }}",
+            "guest_additions_sha256": "{{ user `vagrant_guest_additions_iso_sha256_checksum` }}",
+            "virtualbox_version_file": ".vbox_version",
+            "output_directory": "builds/virtualbox/{{ user `runid` }}",
+            "vm_name": "{{ user `project_name` }}-base-{{ user `linux_distro` }}",
+            "vboxmanage": [
+                ["modifyvm", "{{ .Name }}", "--memory", "{{ user `vb_memory` }}"],
+                ["modifyvm", "{{ .Name }}", "--cpus", "{{ user `vb_cpu_cores` }}"]
+            ]
+        }
+    ],
+    "provisioners": [{
+            "type": "shell",
+            "only": ["ami", "box"],
+            "execute_command": "echo 'vagrant' | {{ .Vars }} /usr/bin/sudo -S -E bash '{{ .Path }}'",
+            "script": "scripts/setup-base.sh"
+        },
+        {
+            "type": "shell",
+            "only": ["box"],
+            "execute_command": "echo 'vagrant' | {{ .Vars }} /usr/bin/sudo -S -E bash '{{ .Path }}'",
+            "script": "scripts/setup-vagrant.sh"
+        },
+        {
+            "type": "ansible-local",
+            "only": ["box"],
+            "playbook_file": "ansible/playbooks/samvera-base-ubuntu.yml",
+            "galaxy_file": "ansible/requirements/ubuntu.yml",
+            "extra_arguments": [
+                "-e \"samvera_db_user={{ user `samvera_db_user` }}\"",
+                "-e \"samvera_db_password={{ user `samvera_db_password` }}\"",
+                "-e \"fcdb_user={{ user `fcdb_user` }}",
+                "-e \"fcdb_password={{ user `fcdb_password` }}",
+                "-e \"os_user=vagrant",
+                "-e \"os_password=vagrant",
+                "-e \"postgres_pass={{ user `root_db_password` }}\"",
+                "-e \"timezone={{ user `timezone` }}\"",
+                "-e \"hostname={{ user `hostname` }}\"",
+                "-e \"domain={{ user `domain` }}\"",
+                "-e \"project_name={{ user `project_name` }}\"",
+                "-e \"ssh_keys_to_add={{ user `ssh_keys_to_add` }}\"",
+                "-e \"ansible_sudo_pass=vagrant\""
+            ]
+        },
+        {
+            "type": "ansible-local",
+            "only": ["ami"],
+            "playbook_file": "ansible/playbooks/samvera-base-ubuntu.yml",
+            "galaxy_file": "ansible/requirements/ubuntu.yml",
+            "extra_arguments": [
+                "-e \"samvera_db_user={{ user `samvera_db_user` }}\"",
+                "-e \"samvera_db_password={{ user `samvera_db_password` }}\"",
+                "-e \"fcdb_user={{ user `fcdb_user` }}",
+                "-e \"fcdb_password={{ user `fcdb_password` }}",
+                "-e \"postgres_pass={{ user `root_db_password` }}\"",
+                "-e \"timezone={{ user `timezone` }}\"",
+                "-e \"hostname={{ user `hostname` }}\"",
+                "-e \"domain={{ user `domain` }}\"",
+                "-e \"project_name={{ user `project_name` }}\"",
+                "-e \"ssh_keys_to_add={{ user `ssh_keys_to_add` }}\""
+            ]
+        },
+        {
+            "type": "shell",
+            "only": ["ami", "box"],
+            "execute_command": "echo 'vagrant' | {{ .Vars }} /usr/bin/sudo -S -E bash '{{ .Path }}'",
+            "script": "scripts/cleanup.sh"
+        }
+    ],
+    "post-processors": [
+        [{
+                "type": "vagrant",
+                "only": ["box"],
+                "output": "builds/vagrant/{{ user `project_name` }}-base-{{ user `linux_distro` }}.box",
+                "vagrantfile_template": "vagrant/base/Vagrantfile",
+                "keep_input_artifact": true
+            },
+            {
+                "type": "vagrant-cloud",
+                "only": ["box"],
+                "box_tag": "{{ user `vagrant_cloud_user` }}/{{ user `project_name` }}-base-{{ user `linux_distro` }}",
+                "access_token": "{{ user `vagrant_cloud_token` }}",
+                "version": "{{ user `build_version` }}-{{ timestamp }}"
+            },
+            {
+                "type": "shell-local",
+                "only": ["box"],
+                "inline": [
+                    "mv builds/virtualbox/{{ user `runid` }}/* builds/virtualbox/",
+                    "rmdir builds/virtualbox/{{ user `runid` }}"
+                ]
+            }
+        ]
+    ]
+}
