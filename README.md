@@ -2,8 +2,6 @@
 
 A project to build a [Samvera/Hyrax](https://github.com/samvera/hyrax) developer's box using [Packer](https://www.packer.io/). Since we are new to the Samvera/Hyrax stack, we are learning as we go (i.e., this project is continually evolving). It's intended, though, as a general Samvera/Hyrax build process (so that one can reference their Hyrax application's GitHub repository and have the build work). There are some [as of yet undocumented](https://github.com/UCLALibrary/packer-samvera/issues/28) conventions that need to be followed for the build to work. In the meantime, you can look at UCLA's [Californica](https://github.com/UCLALibrary/californica/) project as an example of a project that works with packer-samvera.
 
-FWIW (and to their credit), the heavy lifting of the packer-samvera build is currently done by Data Curation Experts' [ansible-samvera](https://github.com/curationexperts/ansible-samvera) project.
-
 There are currently two possible outputs from this Packer Samvera build: an AWS AMI (stored in your AWS space) and/or a Vagrant VirtualBox.
 
 ## Requirements

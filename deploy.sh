@@ -27,7 +27,7 @@ DEFAULT_CORE_COUNT=2
 DEFAULT_MEMORY=2048
 
 # Optionally, make our builds speedier by giving them full access to the host's resources
-if [ "$3" == "fast" ]; then
+if [ "$3" == "fast" ] || [ "$2" == "fast" ]; then
   if hash getconf 2>/dev/null; then
     if hash free 2>/dev/null; then
       VB_MEMORY=$(free -m | awk '/^Mem:/{print $7}')
@@ -80,10 +80,19 @@ if [ ! -f config.json ]; then
   exit 1
 fi
 
-# Get variables we need to check the latest version
+# Get variables we need to check the latest version and desired distro
 PROJECT_NAME=$(cat config.json | jq -r '.project_name')
 PROJECT_OWNER=$(cat config.json | jq -r '.project_owner')
 PROJECT_VERSION=$(cat config.json | jq -r '.project_version')
+LINUX_DISTRO=$(cat config.json | jq -r '.linux_distro')
+
+# Check with Linux distro we want to use with the build
+if [ -z "$LINUX_DISTRO" ]; then
+  LINUX_DISTRO="ubuntu"
+elif [ "$LINUX_DISTRO" != "ubuntu" ] && [ "$LINUX_DISTRO" != "centos" ]; then
+  echo "Only valid options for 'linux_distro' at this point are 'centos' or 'ubuntu'"
+  exit 1
+fi
 
 # Label a build artifact pushed to Vagrant Cloud with either SNAPSHOT or a tag/branch name
 if [ -z "$PROJECT_NAME" ] || [ -z "$PROJECT_OWNER" ]; then
@@ -93,9 +102,9 @@ else
   BUILD_VERSION=$(curl --silent "https://api.github.com/repos/${PROJECT_OWNER}/${PROJECT_NAME}/${VERSION_TYPE}" | jq -r '.[0].name')
 
   if [ "$PROJECT_VERSION" != 'HEAD' ] && [ "$PROJECT_VERSION" != 'master' ]; then
-    BUILD_VERSION="${BUILD_VERSION:1}-${PROJECT_VERSION}"
+    BUILD_VERSION="${BUILD_VERSION:1}-${LINUX_DISTRO}-${PROJECT_VERSION}"
   else
-    BUILD_VERSION="${BUILD_VERSION:1}-SNAPSHOT"
+    BUILD_VERSION="${BUILD_VERSION:1}-${LINUX_DISTRO}-SNAPSHOT"
   fi
 
   PURPLE='\033[0;35m'
@@ -103,12 +112,14 @@ else
   printf "${PURPLE}Building ${PROJECT_OWNER}/${PROJECT_NAME} ${BUILD_VERSION}${NC}\n\n"
 fi
 
-if [ -z "$1" ] && [ -z "$2" ]; then
+if [ -z "$1" ]; then
   printUsage
 elif [ "$2" == "ami" ] || [ "$2" == "box" ]; then
   if [ "$1" == "base" ] || [ "$1" == "hyrax" ]; then
-    PACKER_LOG="$PACKER_LOG" packer "$PACKER_ACTION" -only="$2" -var-file=config.json $ON_ERROR \
-      -var="vb_memory=$VB_MEMORY" -var="vb_cpu_cores=$VB_CPU_CORES" -var="build_version=$BUILD_VERSION" samvera-${1}.json
+    PACKER_LOG="${PACKER_LOG}" packer "${PACKER_ACTION}" -only="${2}" -var-file="config.json" \
+      -var="linux_distro=${LINUX_DISTRO}" -var="build_version=${BUILD_VERSION}" "$ON_ERROR" \
+      -var="vb_memory=${VB_MEMORY}" -var="vb_cpu_cores=${VB_CPU_CORES}" \
+      "samvera-${1}-${LINUX_DISTRO}.json"
   else
     printUsage
   fi

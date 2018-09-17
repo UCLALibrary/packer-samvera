@@ -81,7 +81,10 @@
                 "-e \"cap_deployment={{ user `cap_deployment` }}\"",
                 "-e \"project_version={{ user `project_version` }}\"",
                 "-e \"default_contact_email={{ user `default_contact_email` }}\"",
-                "-e \"default_admin_password={{ user `default_admin_password` }} ansible_sudo_pass=vagrant\""
+                "-e \"default_admin_password={{ user `default_admin_password` }}\"",
+                "-e \"ansible_sudo_pass=vagrant\"",
+                "--skip-tags always",
+                "--tags \"untagged,development\""
             ]
         },
         {
@@ -104,7 +107,10 @@
                 "-e \"project_version={{ user `project_version` }}\"",
                 "-e \"default_contact_email={{ user `default_contact_email }}\"",
                 "-e \"default_admin_password={{ user `default_admin_password` }}\"",
-                "--sudo"
+                "--sudo",
+                "--skip-tags always",
+                "--tags \"untagged,development\""
+
             ]
         },
         {
@@ -112,7 +118,6 @@
             "only": ["box"],
             "execute_command": "echo 'vagrant' | {{ .Vars }} /usr/bin/sudo -S -E bash '{{ .Path }}'",
             "scripts": [
-                "scripts/hyrax-dev-config.sh",
                 "scripts/git-config-ssh.sh"
             ],
             "environment_vars": [
@@ -126,21 +131,7 @@
             "only": ["ami", "box"],
             "execute_command": "echo 'vagrant' | {{ .Vars }} /usr/bin/sudo -S -E bash '{{ .Path }}'",
             "scripts": [
-                "scripts/setup-hyrax.sh",
                 "scripts/cleanup.sh"
-            ],
-            "environment_vars": [
-                "SECRET_KEY_BASE=asdf",
-                "DB_USERNAME={{ user `samvera_db_user` }}",
-                "DB_PASSWORD={{ user `samvera_db_password` }}",
-                "DB_NAME={{ user `project_name` }}",
-                "PROJECT_OWNER={{ user `project_owner` }}",
-                "PROJECT_NAME={{ user `project_name` }}",
-                "GITHUB_BRANCH={{ user `project_version` }}",
-                "GEONAMES_USERNAME={{ user `geonames_username` }}",
-                "ADMIN_PASSWORD={{ user `samvera_admin_password` }}",
-                "FEDORA_URL=http://localhost:8080/fedora/rest",
-                "SOLR_URL=http://localhost:8983/solr/{{ user `project_name` }}"
             ]
         },
         {
@@ -160,7 +151,7 @@
             {
                 "type": "vagrant-cloud",
                 "only": ["box"],
-                "box_tag": "{{ user `vagrant_cloud_user` }}/{{ user `project_name` }}-{{ user `linux_distro` }}",
+                "box_tag": "{{ user `vagrant_cloud_user` }}/{{ user `project_name` }}",
                 "access_token": "{{ user `vagrant_cloud_token` }}",
                 "version": "{{ user `build_version` }}-{{ timestamp }}"
             }

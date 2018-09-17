@@ -14,7 +14,7 @@ cd /tmp/vboxguest
 ./VBoxLinuxAdditions.run
 cd ~
 sudo umount /tmp/vboxguest
-rm -f VBoxGuestAdditions.iso
+sudo rm -f /home/vagrant/VBoxGuestAdditions.iso
 
 # Setup SSH key environment
 mkdir /home/vagrant/.ssh
