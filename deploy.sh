@@ -56,14 +56,14 @@ VB_MEMORY="${MEMORY:-$VB_MEMORY}"
 
 # Provide a usage statement
 function printUsage() {
-  echo 'Usage: ./build.sh [artifact] [output]'
+  echo 'Usage: ./deploy.sh [artifact] [output]'
   echo 'Examples:'
-  echo '  ./build.sh base ami'
-  echo '  ./build.sh hyrax ami'
-  echo '  ./build.sh base box'
-  echo '  ./build.sh hyrax box'
-#  echo '  ./build.sh base image'
-#  echo '  ./build.sh hyrax image'
+  echo '  ./deploy.sh base ami'
+  echo '  ./deploy.sh hyrax ami'
+  echo '  ./deploy.sh base box'
+  echo '  ./deploy.sh hyrax box'
+#  echo '  ./deploy.sh base image'
+#  echo '  ./deploy.sh hyrax image'
 
   exit 1
 }
