@@ -1,4 +1,2 @@
 - name: uclalib_role_samvera_capdeploy
   src: https://github.com/ksclarke/uclalib_role_samvera_capdeploy
-#  version: origin/master
-  version: origin/add-dev-tests
